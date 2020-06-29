@@ -1,0 +1,2 @@
+include LICENSE
+include tap_amazon_ads_dsp/schemas/*.json

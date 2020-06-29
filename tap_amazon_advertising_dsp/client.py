@@ -1,17 +1,27 @@
+import json
+import threading
+import time
+import zlib
+
 import requests
 import requests_oauthlib
 import singer
 import singer.metrics
-
-import zlib
-import json
-import time
 
 LOGGER = singer.get_logger()  # noqa
 
 TOKEN_URL = 'https://api.amazon.com/auth/o2/token'
 SCOPES = ["cpc_advertising:campaign_management"]
 ADS_URL = 'https://advertising-api.amazon.com/dsp/reports'
+TOKEN_EXPIRATION_PERIOD = 3000
+
+
+class Server5xxError(Exception):
+    pass
+
+
+class Server42xRateLimitError(Exception):
+    pass
 
 
 class AmazonAdvertisingClient:
@@ -20,57 +30,120 @@ class AmazonAdvertisingClient:
 
     def __init__(self, config):
         self.config = config
-        self.access_token = self.get_authorization()
+        self.login_timer = None
+        self.session = requests.Session()
 
-    def get_authorization(self):
+    def login(self):
+        LOGGER.info(f"Refreshing token")
         client_id = self.config.get('client_id')
-        oauth = requests_oauthlib.OAuth2Session(
-                    client_id,
-                    redirect_uri=self.config.get('redirect_uri'),
-                    scope=SCOPES)
 
-        tokens = oauth.refresh_token(
-                    TOKEN_URL,
-                    refresh_token=self.config.get('refresh_token'),
-                    client_id=self.config.get('client_id'),
-                    client_secret=self.config.get('client_secret'))
+        try:
+            oauth = requests_oauthlib.OAuth2Session(
+                client_id,
+                redirect_uri=self.config.get('redirect_uri'),
+                scope=SCOPES)
 
-        return tokens['access_token']
+            tokens = oauth.refresh_token(
+                TOKEN_URL,
+                refresh_token=self.config.get('refresh_token'),
+                client_id=self.config.get('client_id'),
+                client_secret=self.config.get('client_secret'))
+        except Exception as ex:
+            pass
+        finally:
+            self.login_timer = threading.Timer(TOKEN_EXPIRATION_PERIOD,
+                                               self.login)
+            self.login_timer.start()
 
-    def _make_request(self, method, entity, params=None, body=None, attempts=0):
-        LOGGER.info("Making {} request ({})".format(method, params))
+        self.access_token = tokens['access_token']
 
-        response = requests.request(
-            method,
-            ADS_URL,
-            headers={
-                'Authorization': 'Bearer {}'.format(self.access_token),
-                'Amazon-Advertising-API-ClientId': self.config.get('client_id'),
-                'Amazon-Advertising-API-Scope': entity,
-            },
-            params=params,
-            data=body)
+    def _make_request(self,
+                      url=None,
+                      method=None,
+                      entity=None,
+                      job=None,
+                      params=None,
+                      body=None,
+                      attempts=0,
+                      stream=False):
+        if job:
+            url = ADS_URL + '/' + job
+        else:
+            url = ADS_URL
+        LOGGER.info("Making {} request ({})".format(method, url))
+
+        headers = {
+            'Authorization': 'Bearer {}'.format(self.access_token),
+            'Amazon-Advertising-API-ClientId': self.config.get('client_id'),
+            'Amazon-Advertising-API-Scope': entity,
+        }
+
+        if method == "GET":
+            LOGGER.info(
+                f"Making {method} request to {url} with params: {params}")
+            response = self.session.get(url,
+                                        headers=headers,
+                                        stream=stream,
+                                        params=params)
+        elif method == "POST":
+            LOGGER.info(f"Making {method} request to {url} with body {body}")
+            response = self.session.post(url,
+                                         headers=headers,
+                                         params=params,
+                                         data=body)
+        elif method == "PATCH":
+            LOGGER.info(f"Making {method} request to {url} with body {body}")
+            response = self.session.patch(url,
+                                          headers=headers,
+                                          json=body,
+                                          params=params)
+        else:
+            raise Exception("Unsupported HTTP method")
 
         LOGGER.info("Received code: {}".format(response.status_code))
 
-        if attempts < self.MAX_TRIES and response.status_code in [429, 502, 401]:
+        if attempts < self.MAX_TRIES and response.status_code in [
+                429, 502, 401
+        ]:
             if response.status_code == 401:
-                LOGGER.info("Received unauthorized error code, retrying: {}".format(response.text))
+                LOGGER.info(
+                    "Received unauthorized error code, retrying: {}".format(
+                        response.text))
                 self.access_token = self.get_authorization()
 
-            else:
-                LOGGER.info("Received rate limit response, sleeping: {}".format(response.text))
-                time.sleep(30)
+            elif response.status_code == 429:
+                LOGGER.info("Received rate limit response: {}".format(
+                    response.headers))
+                retry_after = int(response.headers['retry-after'])
+                LOGGER.info(f"Sleeping for {retry_after}")
+                time.sleep(retry_after)
 
-            return self._make_request(url, method, params, body, attempts+1)
+            return self._make_request(method=method,
+                                      url=url,
+                                      params=params,
+                                      body=body,
+                                      attempts=attempts + 1,
+                                      stream=stream)
 
         if response.status_code not in [200, 201, 202]:
             raise RuntimeError(response.text)
 
         return response
 
-    def make_request(self, url, method, params=None, body=None):
-        return self._make_request(url, method, params, body).json()
+    def make_request(self, url, method):
+        return self._make_request(url=url,
+                                  method=method,
+                                  params=params,
+                                  body=body).json()
+
+    def download_report(self, url):
+        LOGGER.info("Making {} request ({})".format('GET', url))
+
+        response = requests.request('GET', url, stream=True)
+
+        LOGGER.info("Received code: {}".format(response.status_code))
+
+        return response
 
     def download_gzip(self, url):
         resp = None
@@ -80,15 +153,18 @@ class AmazonAdvertisingClient:
                 resp = self._make_request(url, 'GET')
                 break
             except ConnectionError as e:
-                LOGGER.info("Caught error while downloading gzip, sleeping: {}".format(e))
+                LOGGER.info(
+                    "Caught error while downloading gzip, sleeping: {}".format(
+                        e))
                 time.sleep(10)
         else:
-            raise RuntimeError("Unable to sync gzip after {} attempts".format(attempts))
+            raise RuntimeError(
+                "Unable to sync gzip after {} attempts".format(attempts))
 
         return self.unzip(resp.content)
 
     @classmethod
     def unzip(cls, blob):
-        extracted = zlib.decompress(blob, 16+zlib.MAX_WBITS)
+        extracted = zlib.decompress(blob, 16 + zlib.MAX_WBITS)
         decoded = extracted.decode('utf-8')
         return json.loads(decoded)

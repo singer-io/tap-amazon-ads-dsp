@@ -1,19 +1,19 @@
 # pylint: disable=too-many-lines
-from datetime import datetime, timedelta
-import time
-from urllib.parse import urlparse
-import pytz
-import singer
-from singer import metrics, metadata, Transformer, utils
-from singer.utils import strptime_to_utc
-
-from tap_amazon_advertising_dsp.transform import transform_record, transform_report
-from tap_amazon_advertising_dsp.schema import REPORT_TYPE_DIMENSION_METRICS
 import json
-# from tap_amazon_advertising_dsp.streams import flatten_streams
+import random
+import time
+from datetime import timedelta
+from urllib.parse import urlparse
+
+import singer
+from singer import Transformer, metadata, metrics, utils
+from singer.utils import strptime_to_utc
+from tap_amazon_advertising_dsp.schema import REPORT_TYPE_DIMENSION_METRICS
+from tap_amazon_advertising_dsp.transform import transform_report
 
 LOGGER = singer.get_logger()
-REPORT_GRANULARITY = 'day'
+DEFAULT_ATTRIBUTION_WINDOW = 14
+
 
 def write_schema(catalog, stream_name):
     stream = catalog.get_stream(stream_name)
@@ -22,36 +22,44 @@ def write_schema(catalog, stream_name):
     try:
         singer.write_schema(stream_name, schema, stream.key_properties)
     except OSError as err:
-        LOGGER.error('Stream: {} - OS Error writing schema'.format(stream_name))
+        LOGGER.error(
+            'Stream: {} - OS Error writing schema'.format(stream_name))
         raise err
 
 
 def write_record(stream_name, record, time_extracted):
     try:
-        singer.messages.write_record(
-            stream_name, record, time_extracted=time_extracted)
+        singer.messages.write_record(stream_name,
+                                     record,
+                                     time_extracted=time_extracted)
     except OSError as err:
-        LOGGER.error('Stream: {} - OS Error writing record'.format(stream_name))
+        LOGGER.error(
+            'Stream: {} - OS Error writing record'.format(stream_name))
         LOGGER.error('record: {}'.format(record))
         raise err
 
 
-def get_bookmark(state, stream, default):
+def get_bookmark(state, stream, entity, default):
     # default only populated on initial sync
-    if (state is None) or ('bookmarks' not in state):
+    if (state is None) or ('bookmarks' not in state) or (
+            stream
+            not in state['bookmarks']) or (entity
+                                           not in state['bookmarks'][stream]):
         return default
-    return (
-        state
-        .get('bookmarks', {})
-        .get(stream, default)
-    )
+    return state.get('bookmarks', {}).get(stream).get(entity, default)
 
 
-def write_bookmark(state, stream, value):
+def write_bookmark(state, stream, entity, value):
     if 'bookmarks' not in state:
         state['bookmarks'] = {}
-    state['bookmarks'][stream] = value
-    LOGGER.info('Stream: {} - Write state, bookmark value: {}'.format(stream, value))
+    if stream not in state['bookmarks']:
+        state['bookmarks'][stream] = {}
+    if entity not in state['bookmarks'][stream]:
+        state['bookmarks'][stream][entity] = {}
+    state['bookmarks'][stream][entity] = value
+    LOGGER.info(
+        'Stream: {}, Entity {} - Write state, bookmark value: {}'.format(
+            stream, entity, value))
     singer.write_state(state)
 
 
@@ -73,19 +81,25 @@ def obj_to_dict(obj):
     return result
 
 
-def get_resource(stream_name, client, path, params=None):
+def get_resource(stream_name, client, entity, job_id, params=None):
     try:
-        request = Request(client, 'get', resource, params=params) #, stream=True)
+        # request = Request(client, 'get', resource, params=params) #, stream=True)
+        # job_status = get_resource(stream, client, entity, job_id, path, params)
+        response = client._make_request(method='GET',
+                                        entity=entity,
+                                        job=job_id)
     except Exception as err:
         LOGGER.error('Stream: {} - ERROR: {}'.format(stream_name, err))
         raise err
-    cursor = Cursor(None, request)
-    return cursor
+    response_body = response.json()
+    return response_body
 
 
-def post_resource(report_name, entity, client, body=None):
+def post_resource(client, report_name, entity, body=None):
     try:
-        response = client._make_request('post', entity, body=body)
+        response = client._make_request(method='POST',
+                                        entity=entity,
+                                        body=body)
     except Exception as err:
         LOGGER.error('Report: {} - ERROR: {}'.format(report_name, err))
         raise err
@@ -93,14 +107,13 @@ def post_resource(report_name, entity, client, body=None):
     return response_body
 
 
-def get_async_data(report_name, client, queued_report):
-    url = queued_report.get('job_result').get('location')
+def get_async_data(client, stream, entity, location):
     try:
-        response = Request(
-            client, 'get', url, raw_body=True, stream=True).perform()
-        response_body = response.body
+        LOGGER.info(f'Downloading report for entity {entity} from {location}')
+        response = client.download_report(location)
+        response_body = response.json()
     except Exception as err:
-        LOGGER.error('Report: {} - ERROR: {}'.format(report_name, err.details))
+        LOGGER.error('Report: {} {} - ERROR: {}'.format(stream, entity, err))
         raise err
     return response_body
 
@@ -123,14 +136,14 @@ def get_selected_fields(catalog, stream_name):
 
 
 def remove_minutes_local(dttm, tzone):
-    new_dttm = dttm.astimezone(tzone).replace(
-        minute=0, second=0, microsecond=0)
+    new_dttm = dttm.astimezone(tzone).replace(minute=0,
+                                              second=0,
+                                              microsecond=0)
     return new_dttm
 
 
 def remove_hours_local(dttm):
-    new_dttm = dttm.replace(
-        hour=0, minute=0, second=0, microsecond=0)
+    new_dttm = dttm.replace(hour=0, minute=0, second=0, microsecond=0)
     return new_dttm
 
 
@@ -146,7 +159,8 @@ def update_currently_syncing(state, stream_name):
     singer.write_state(state)
     LOGGER.info('Stream: {} - Currently Syncing'.format(stream_name))
 
-# Round start and end times based on granularity and timezone
+
+# Round start and end times based to day
 def round_times(start=None, end=None):
     start_rounded = None
     end_rounded = None
@@ -158,7 +172,7 @@ def round_times(start=None, end=None):
 
 # Determine absolute start and end times w/ attribution_window constraint
 # abs_start/end and window_start/end must be rounded to nearest hour or day (granularity)
-def get_absolute_start_end_time(REPORT_GRANULARITY, last_dttm, attribution_window):
+def get_absolute_start_end_time(last_dttm, attribution_window):
     now_dttm = utils.now()
     delta_days = (now_dttm - last_dttm).days
     if delta_days < attribution_window:
@@ -171,71 +185,35 @@ def get_absolute_start_end_time(REPORT_GRANULARITY, last_dttm, attribution_windo
 
 # POST QUEUED ASYNC JOB
 # pylint: disable=line-too-long
-def post_queued_async_jobs(client, entity, report_name, report_type, window_start, report_config):
-    LOGGER.info('Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job'.format(
-        report_name, entity, report_type))
+def post_queued_async_jobs(client, entity, report_name, report_type,
+                           window_start, report_config):
+    LOGGER.info(
+        'Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job'.
+        format(report_name, entity, report_type))
     # POST queued_job: asynchronous job
-    queued_job = post_resource(report_name, entity, client, body=json.dumps(report_config))
+    queued_job = post_resource(client,
+                               report_name,
+                               entity,
+                               body=json.dumps(report_config))
     return queued_job
 
 
-def get_async_results_urls(client, account_id, report_name, queued_job_ids):
-    jobs_still_running = True # initialize
-    j = 1 # job status check counter
-    async_results_urls = []
-    while len(queued_job_ids) > 0 and jobs_still_running and j <= 20:
-        # Wait 15 sec for async reports to finish
-        wait_sec = 15
-        LOGGER.info('Report: {} - Waiting {} sec for async job to finish'.format(
-            report_name, wait_sec))
-        time.sleep(wait_sec)
-
-        # GET async_job_status
-        LOGGER.info('Report: {} - GET async_job_statuses'.format(report_name))
-        async_job_statuses_path = 'stats/jobs/accounts/{account_id}'.replace(
-            '{account_id}', account_id)
-        async_job_statuses_params = {
-            # What is the concurrent job_id limit?
-            'job_ids': ','.join(map(str, queued_job_ids)),
-            'count': 1000,
-            'cursor': None
-        }
-        LOGGER.info('Report: {} - async_job_statuses GET URL: {}/{}/{}'.format(
-            report_name, ADS_API_URL, API_VERSION, async_job_statuses_path))
-        LOGGER.info('Report: {} - async_job_statuses params: {}'.format(
-            report_name, async_job_statuses_params))
-        async_job_statuses = get_resource('async_job_statuses', client, async_job_statuses_path, \
-            async_job_statuses_params)
-
-        jobs_still_running = False
-        for async_job_status in async_job_statuses:
-            job_status_dict = obj_to_dict(async_job_status)
-            job_id = job_status_dict.get('id_str')
-            job_status = job_status_dict.get('status')
-            if job_status == 'PROCESSING':
-                jobs_still_running = True
-            elif job_status == 'SUCCESS':
-                LOGGER.info('Report: {} - job_id: {}, finished running (SUCCESS)'.format(
-                    report_name, job_id))
-                job_results_url = job_status_dict.get('url')
-                async_results_urls.append(job_results_url)
-                # LOGGER.info('job_results_url = {}'.format(job_results_url)) # COMMENT OUT
-                # Remove job_id from queued_job_ids
-                queued_job_ids.remove(job_id)
-            # End: async_job_status in async_job_statuses
-        j = j + 1 # increment job status check counter
-        # End: async_job_status in async_job_statuses
-    return async_results_urls
+def report_is_ready(stream, client, entity, job_id):
+    job_status = get_resource(stream, client, entity, job_id)
+    if job_status.get('status') == 'SUCCESS':
+        uri = None
+        try:
+            uri = urlparse(job_status.get('location'))
+        except Exception:
+            LOGGER.info(f'Found bad location URI {uri}')
+            raise Exception
+        return True, uri.geturl()
+    else:
+        return False, None
 
 
-def sync_report(client,
-                catalog,
-                state,
-                start_date,
-                report_name,
-                report_config,
-                tap_config,
-                entity):
+def sync_report(client, catalog, state, start_date, report_name, report_config,
+                tap_config, entity):
 
     # PROCESS:
     # Outer-outer loop (in sync): loop through accounts
@@ -249,19 +227,20 @@ def sync_report(client,
     # 3. GET ASYNC Job Statuses and Download URLs (when complete)
     # 4. Download Data from URLs and Sync data to target
     report_type = report_config.get('type')
-    advertiserIds = tap_config.get('advertiserIds')
+    advertiser_ids = tap_config.get('advertiserIds')
     LOGGER.info('Report: {}, Entity: {}, Type: {}, Dimensions: {}'.format(
         report_name, entity, report_type, report_config.get('dimensions')))
 
     # Bookmark datetimes
-    last_datetime = get_bookmark(state, report_name, start_date)
+    last_datetime = str(get_bookmark(state, report_name, entity, start_date))
     last_dttm = strptime_to_utc(last_datetime)
     max_bookmark_value = last_datetime
 
     # Get absolute start and end times
-    attribution_window = int(tap_config.get('attribution_window', '1'))
-    abs_start, abs_end = get_absolute_start_end_time(
-        'day', last_dttm, attribution_window)
+    attribution_window = int(
+        tap_config.get('attribution_window', DEFAULT_ATTRIBUTION_WINDOW))
+    abs_start, abs_end = get_absolute_start_end_time(last_dttm,
+                                                     attribution_window)
 
     # Initialize date window
     date_window_size = 1
@@ -276,35 +255,41 @@ def sync_report(client,
 
     # DATE WINDOW LOOP
     while window_start != abs_end:
-        window_entity_id_sets = []
-        window_start_rounded, window_end_rounded = round_times(window_start, window_end)
+        window_start_rounded, window_end_rounded = round_times(
+            window_start, window_end)
         window_start_str = window_start_rounded.strftime('%Y%m%d')
-        window_end_str = window_end_rounded.strftime('%Y%m%d')
 
-        LOGGER.info('Report: {} - Date window: {} to {}'.format(
-            report_name, window_start_str, window_end_str))
+        LOGGER.info('Report: {} - Date window: {}'.format(
+            report_name, window_start_str))
 
-        dimensions = report_config.get('dimensions', REPORT_TYPE_DIMENSION_METRICS.get(report_type).get('DIMENSIONS'))
-        metrics = ','.join(REPORT_TYPE_DIMENSION_METRICS.get(report_type).get('METRICS'))
+        api_dimensions = report_config.get(
+            'dimensions',
+            REPORT_TYPE_DIMENSION_METRICS.get(report_type).get('DIMENSIONS'))
+        api_metrics = ','.join(
+            REPORT_TYPE_DIMENSION_METRICS.get(report_type).get('METRICS'))
 
-        REPORT_CONFIG = {
+        report_config = {
             'reportDate': window_start_str,
             'format': 'JSON',
             'type': report_config.get('type'),
-            'dimensions': dimensions,
-            'metrics': metrics
+            'dimensions': api_dimensions,
+            'metrics': api_metrics
         }
 
-        if advertiserIds:
-            REPORT_CONFIG['advertiserIds'] = advertiserIds
+        if advertiser_ids:
+            report_config['advertiserIds'] = advertiser_ids
 
-        job_result = post_queued_async_jobs(client, entity, report_name,
-                                            report_type, window_start=window_start_str,
-                                            report_config=REPORT_CONFIG)
-        
+        job_result = post_queued_async_jobs(client,
+                                            entity,
+                                            report_name,
+                                            report_type,
+                                            window_start=window_start_str,
+                                            report_config=report_config)
+
         queued_reports[job_result.get('reportId')] = {
             "job_result": job_result,
-            "report_config": REPORT_CONFIG
+            "report_config": report_config,
+            "retries": 0
         }
 
         window_start = window_start + timedelta(days=date_window_size)
@@ -317,56 +302,77 @@ def sync_report(client,
     schema = stream.schema.to_dict()
     stream_metadata = metadata.to_map(stream.metadata)
 
-    # ASYNC RESULTS DOWNLOAD / PROCESS LOOP
     total_records = 0
-    # queued_job_ids = 
-    for key in queued_reports:
+    max_bookmark_value = 0
 
-        if report_is_ready(queued_reports.get('key')):
-            async_data = get_async_data(report_name, client, queued_reports.get('key'))
-            # LOGGER.info('async_data = {}'.format(async_data)) # COMMENT OUT
+    # ASYNC RESULTS DOWNLOAD / PROCESS LOOP
+    while len(queued_job_ids) > 0:
+        job_id = random.choice(queued_job_ids)
+
+        # Exponential backoff
+        job_retries = queued_reports[job_id]['retries']
+        wait_sec = 2**job_retries
+        LOGGER.info(
+            f'Job: {job_id}, Report: {report_name}, Retry - Waiting {wait_sec} sec for async job to finish'
+        )
+        time.sleep(wait_sec)
+
+        ready, location = report_is_ready(stream,
+                                          client,
+                                          entity,
+                                          job_id=job_id)
+
+        if ready:
+            LOGGER.info(f'Job {job_id} ready: retrieving location {location}')
+            async_data = get_async_data(client, stream, entity, location)
 
             # time_extracted: datetime when the data was extracted from the API
             time_extracted = utils.now()
 
-            # TRANSFORM REPORT DATA
-            transformed_data = []
-            transformed_data = transform_report(report_name, async_data, account_id)
-            # LOGGER.info('transformed_data = {}'.format(transformed_data)) # COMMENT OUT
-            if transformed_data is None or transformed_data == []:
-                LOGGER.info('Report: {} - NO TRANSFORMED DATA for URL: {}'.format(
-                    report_name, async_results_url))
+            # Transform report data
+            report_date = int(
+                queued_reports.get(job_id).get('report_config').get(
+                    'reportDate'))
+            report_type = queued_reports.get(job_id).get('report_config').get(
+                'type')
+            report_dimensions = queued_reports.get(job_id).get(
+                'report_config').get('dimensions')
+
+            transformed_records = transform_report(report_name,
+                                                   report_dimensions,
+                                                   async_data)
 
             # PROCESS RESULTS TO TARGET RECORDS
             with metrics.record_counter(report_name) as counter:
-                for record in transformed_data:
+                for record in transformed_records:
                     # Transform record with Singer Transformer
-
-                    # Evalueate max_bookmark_value
-                    end_time = record.get('end_time') # String
-                    end_dttm = strptime_to_utc(end_time) # Datetime
-                    max_bookmark_dttm = strptime_to_utc(max_bookmark_value) # Datetime
-                    if end_dttm > max_bookmark_dttm: # Datetime comparison
-                        max_bookmark_value = end_time # String
-
                     with Transformer() as transformer:
                         transformed_record = transformer.transform(
-                            record,
-                            schema,
-                            stream_metadata)
+                            record, schema, stream_metadata)
 
-                        write_record(report_name, transformed_record, time_extracted=time_extracted)
+                        write_record(report_name,
+                                     transformed_record,
+                                     time_extracted=time_extracted)
                         counter.increment()
-
-            # Increment total_records
-            total_records = total_records + counter.value
+                # Increment total_records
+                total_records = total_records + counter.value
             # End: for async_results_url in async_results_urls
 
-    # Update the state with the max_bookmark_value for the stream
-    write_bookmark(state, report_name, max_bookmark_value)
+            queued_job_ids.remove(job_id)
+
+            # Update the state with the max_bookmark_value for the stream
+            if report_date > max_bookmark_value:
+                max_bookmark_value = report_date
+            write_bookmark(state, report_name, entity, report_date)
+        else:
+            # Exponential to limit of 256 seconds
+            if job_retries < 9:
+                queued_reports[job_id]['retries'] = queued_reports[job_id].get(
+                    'retries') + 1
 
     return total_records
     # End sync_report
+
 
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
@@ -426,8 +432,9 @@ def sync(client, config, catalog, state):
                                         entity=entity)
 
             # pylint: disable=line-too-long
-            LOGGER.info('Report: {} - FINISHED Syncing for Entity: {}, Total Records: {}'.format(
-                report_name, entity, total_records))
+            LOGGER.info(
+                'Report: {} - FINISHED Syncing for Entity: {}, Total Records: {}'
+                .format(report_name, entity, total_records))
             # pylint: enable=line-too-long
             update_currently_syncing(state, None)
 

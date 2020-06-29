@@ -16,12 +16,11 @@ def discover(reports):
                 table_metadata = entry.get('metadata', {})
         key_properties = table_metadata.get('table-key-properties')
 
-        catalog.streams.append(CatalogEntry(
-            stream=stream_name,
-            tap_stream_id=stream_name,
-            key_properties=key_properties,
-            schema=schema,
-            metadata=mdata
-        ))
+        catalog.streams.append(
+            CatalogEntry(stream=stream_name,
+                         tap_stream_id=stream_name,
+                         key_properties=key_properties,
+                         schema=schema,
+                         metadata=mdata))
 
     return catalog

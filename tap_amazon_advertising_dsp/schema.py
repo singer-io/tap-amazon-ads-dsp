@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 import singer
 from singer import metadata
 
@@ -396,30 +397,15 @@ REPORT_TYPE_DIMENSION_METRICS = {
     }
 }
 
-ADVERTISER = ["date", "advertiserName", "advertiserId"]
+PRIMARY_KEYS = ['date', 'entityId', 'advertiserId']
 
-ORDER = [
-    "orderName",
-    "orderId",
-    "orderStartDate",
-    "orderEndDate",
-    "orderBudget",
-    "orderExternalId",
-    "orderCurrency",
-]
-
-LINE_ITEM = [
-    "lineItemName", "lineItemId", "lineItemStartDate", "lineItemEndDate",
-    "lineItemBudget", "lineItemExternalId"
-]
-
-CREATIVE = [
-    "creativeName", "creativeID", "creativeType", "creativeSize"
-]
-
-SITE = ["siteName"]
-
-SUPPLY = ["supplySourceName"]
+DIMENSION_PRIMARY_KEYS = {
+    "ORDER": "orderId",
+    "LINE_ITEM": "lineItemId",
+    "CREATIVE": "creativeID",
+    "SITE": "siteName",
+    "SUPPLY": "supplySourceName"
+}
 
 # Reference:
 # https://github.com/singer-io/getting-started/blob/master/docs/DISCOVERY_MODE.md#Metadata
@@ -429,33 +415,9 @@ def get_abs_path(path):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
 
 
-def load_shared_schema_refs():
-    shared_schemas_path = get_abs_path('schemas/shared')
-
-    shared_file_names = [
-        f for f in os.listdir(shared_schemas_path)
-        if os.path.isfile(os.path.join(shared_schemas_path, f))
-    ]
-
-    shared_schema_refs = {}
-    for shared_file in shared_file_names:
-        with open(os.path.join(shared_schemas_path, shared_file)) as data_file:
-            shared_schema_refs[shared_file] = json.load(data_file)
-
-    return shared_schema_refs
-
-
-def resolve_schema_references(schema, refs):
-    if '$ref' in schema['properties']:
-        link = schema['properties']['$ref']
-        schema['properties'].update(refs[link])
-        schema['properties']['$ref']
-
 def get_schemas(reports):
     schemas = {}
     field_metadata = {}
-
-    refs = load_shared_schema_refs()
 
     # JSON schemas for each report
     for report in reports:
@@ -475,13 +437,10 @@ def get_schemas(reports):
                     report_name, report_type, dimension)
                 running_error = '{}; {}'.format(running_error, err)
         
-        report_path = get_abs_path('schemas/shared/report.json')
+        report_path = get_abs_path('schemas/report.json')
 
         with open(report_path) as file:
             schema = json.load(file)
-            
-        # Replace $ref nodes with reference nodes in schema
-        resolve_schema_references(schema, refs)
 
         schemas[report_name] = schema
         mdata = metadata.new()

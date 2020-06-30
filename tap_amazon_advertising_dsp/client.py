@@ -134,7 +134,7 @@ class AmazonAdvertisingClient:
                                   params=params,
                                   body=body).json()
 
-    def download_report(self, url):
+    def stream_report(self, url):
         LOGGER.info("Making {} request ({})".format('GET', url))
         response = requests.request('GET', url, stream=True)
         LOGGER.info("Received code: {}".format(response.status_code))

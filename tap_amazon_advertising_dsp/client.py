@@ -136,7 +136,8 @@ class AmazonAdvertisingClient:
 
     def stream_report(self, url):
         LOGGER.info("Making {} request ({})".format('GET', url))
-        response = requests.request('GET', url, stream=True)
-        LOGGER.info("Received code: {}".format(response.status_code))
-        return response
+        with requests.get(url, stream=True) as response:
+            for line in response.iter_lines():
+                if line:
+                    yield line
 

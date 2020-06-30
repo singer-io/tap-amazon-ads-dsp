@@ -1,0 +1,9 @@
+{
+    "client_id": "",
+    "client_secret": "",
+    "refresh_token": "",
+    "redirect_uri": "",
+    "profile_id": "",
+    "start_date": "2019-04-01",
+    "user_agent": "tap-amazon-advertising <user@email.com>"
+}

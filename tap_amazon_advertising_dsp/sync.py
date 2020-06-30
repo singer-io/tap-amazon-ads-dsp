@@ -9,7 +9,9 @@ import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
 from tap_amazon_advertising_dsp.schema import REPORT_TYPE_DIMENSION_METRICS
-from tap_amazon_advertising_dsp.transform import transform_report
+from tap_amazon_advertising_dsp.transform import transform_record, transform_report
+from tap_amazon_advertising_dsp.schema import (DIMENSION_PRIMARY_KEYS,
+                                               PRIMARY_KEYS)
 
 LOGGER = singer.get_logger()
 DEFAULT_ATTRIBUTION_WINDOW = 14
@@ -111,7 +113,7 @@ def get_async_data(client, stream, entity, location):
     try:
         LOGGER.info(f'Downloading report for entity {entity} from {location}')
         return client.stream_report(location)
-        
+
     except Exception as err:
         LOGGER.error('Report: {} {} - ERROR: {}'.format(stream, entity, err))
         raise err
@@ -256,7 +258,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
         window_start_rounded, window_end_rounded = round_times(
             window_start, window_end)
         window_start_str = window_start_rounded.strftime('%Y%m%d')
-        
+
         LOGGER.info('Report: {} - Date window: {}'.format(
             report_name, window_start_str))
 
@@ -304,11 +306,11 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     max_bookmark_value = 0
 
     # ASYNC RESULTS DOWNLOAD / PROCESS LOOP
-    # - Reports endpoints returns SUCCESS and URI location when report is ready  
+    # - Reports endpoints returns SUCCESS and URI location when report is ready
     # - Process queued reports keeping track of retries and adjusting backoff until report is ready
     # *** TODO: How long to wait and what to do if exceeded? ***
     # *** TODO: Extract to method ***
-    # *** TODO: Decouple report creation and data consumption 
+    # *** TODO: Decouple report creation and data consumption
     while len(queued_job_ids) > 0:
         # Todo: make next
         job_id = random.choice(queued_job_ids)
@@ -342,24 +344,32 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             report_dimensions = queued_reports.get(job_id).get(
                 'report_config').get('dimensions')
 
-            transformed_records = transform_report(report_name,
-                                                   report_type,
-                                                   report_date,
-                                                   report_dimensions,
-                                                   async_data)
+            report_primary_keys = []
+            for key in PRIMARY_KEYS:
+                report_primary_keys.append(key)
+            for dimension in report_dimensions:
+                report_primary_keys.append(
+                    DIMENSION_PRIMARY_KEYS.get(dimension))
+            report_primary_keys.sort()
 
             # PROCESS RESULTS TO TARGET RECORDS
             with metrics.record_counter(report_name) as counter:
-                for record in transformed_records:
-                    # Transform record with Singer Transformer
-                    with Transformer() as transformer:
-                        transformed_record = transformer.transform(
-                            record, schema, stream_metadata)
+                for records in async_data:
+                    if records:
+                        transformed_records = transform_report(
+                            report_name, report_type, report_date,
+                            report_dimensions, json.loads(records))
+                        # Transform record with Singer Transformer
+                        with Transformer() as transformer:
+                            for transformed_record in transformed_records:
+                                singer_transform_record = transformer.transform(
+                                    transformed_record, schema,
+                                    stream_metadata)
 
-                        write_record(report_name,
-                                     transformed_record,
-                                     time_extracted=time_extracted)
-                        counter.increment()
+                                write_record(report_name,
+                                             singer_transform_record,
+                                             time_extracted=time_extracted)
+                                counter.increment()
                 # Increment total_records
                 total_records = total_records + counter.value
             # End: for async_results_url in async_results_urls

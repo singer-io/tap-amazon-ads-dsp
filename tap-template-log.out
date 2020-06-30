@@ -1,0 +1,153 @@
+Cache entry deserialization failed, entry ignored
+Collecting pip
+  Cache entry deserialization failed, entry ignored
+  Downloading https://files.pythonhosted.org/packages/43/84/23ed6a1796480a6f1a2d38f2802901d078266bda38388954d01d3f2e821d/pip-20.1.1-py2.py3-none-any.whl (1.5MB)
+Installing collected packages: pip
+  Found existing installation: pip 8.1.1
+    Uninstalling pip-8.1.1:
+      Successfully uninstalled pip-8.1.1
+Successfully installed pip-20.1.1
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/d1/be/e0/a1e913515c82e3c50bddd816d0b8c74571f6b9089ba9861e8e/singer_tools-0.4.1-cp35-none-any.whl
+Collecting jsonschema==2.6.0
+  Using cached jsonschema-2.6.0-py2.py3-none-any.whl (39 kB)
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/4c/31/ae/9a208bc3bf5ec59edff8f9be27b7a19a8731bb23a798e12167/singer_python-5.9.0-cp35-none-any.whl
+Collecting attrs==16.3.0
+  Using cached attrs-16.3.0-py2.py3-none-any.whl (21 kB)
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/30/6b/50/6c75775b681fb36cdfac7f19799888ef9d8813aff9e379663e/terminaltables-3.1.0-cp35-none-any.whl
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/bb/af/c9/b6e9fb5f9b2470e4ed2a7241c9ab3a8cdd3bc8555ae02ca2e6/strict_rfc3339-0.7-cp35-none-any.whl
+Collecting python-dateutil>=2.6.0
+  Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/a8/3b/dc/a66642acb2b5e193ea388710965b0096b94f99e46632328e7a/ciso8601-2.1.3-cp35-cp35m-macosx_10_14_x86_64.whl
+Collecting pytz==2018.4
+  Using cached pytz-2018.4-py2.py3-none-any.whl (510 kB)
+Collecting backoff==1.8.0
+  Using cached backoff-1.8.0-py2.py3-none-any.whl (45 kB)
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/2b/97/ea/14b63654883bf67fb3216cc0dc11851423081bc22511432797/simplejson-3.11.1-cp35-cp35m-macosx_10_14_x86_64.whl
+Collecting six>=1.5
+  Using cached six-1.15.0-py2.py3-none-any.whl (10 kB)
+Installing collected packages: jsonschema, six, python-dateutil, ciso8601, pytz, backoff, simplejson, singer-python, attrs, terminaltables, strict-rfc3339, singer-tools
+Successfully installed attrs-16.3.0 backoff-1.8.0 ciso8601-2.1.3 jsonschema-2.6.0 python-dateutil-2.8.1 pytz-2018.4 simplejson-3.11.1 singer-python-5.9.0 singer-tools-0.4.1 six-1.15.0 strict-rfc3339-0.7 terminaltables-3.1.0
+Requirement already satisfied: singer-python in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (5.9.0)
+Requirement already satisfied: jsonschema==2.6.0 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from singer-python) (2.6.0)
+Requirement already satisfied: python-dateutil>=2.6.0 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from singer-python) (2.8.1)
+Requirement already satisfied: simplejson==3.11.1 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from singer-python) (3.11.1)
+Requirement already satisfied: backoff==1.8.0 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from singer-python) (1.8.0)
+Requirement already satisfied: pytz==2018.4 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from singer-python) (2018.4)
+Requirement already satisfied: ciso8601 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from singer-python) (2.1.3)
+Requirement already satisfied: six>=1.5 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from python-dateutil>=2.6.0->singer-python) (1.15.0)
+Collecting requests
+  Downloading requests-2.24.0-py2.py3-none-any.whl (61 kB)
+Collecting chardet<4,>=3.0.2
+  Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
+Collecting urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1
+  Using cached urllib3-1.25.9-py2.py3-none-any.whl (126 kB)
+Collecting idna<3,>=2.5
+  Using cached idna-2.9-py2.py3-none-any.whl (58 kB)
+Collecting certifi>=2017.4.17
+  Downloading certifi-2020.4.5.2-py2.py3-none-any.whl (157 kB)
+Installing collected packages: chardet, urllib3, idna, certifi, requests
+Successfully installed certifi-2020.4.5.2 chardet-3.0.4 idna-2.9 requests-2.24.0 urllib3-1.25.9
+Requirement already satisfied: backoff in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (1.8.0)
+Collecting genson
+  Using cached genson-1.2.1.tar.gz (33 kB)
+Using legacy setup.py install for genson, since package 'wheel' is not installed.
+Installing collected packages: genson
+    Running setup.py install for genson: started
+    Running setup.py install for genson: finished with status 'done'
+Successfully installed genson-1.2.1
+Collecting ipykernel
+  Downloading ipykernel-5.3.0-py3-none-any.whl (119 kB)
+Collecting ipython>=5.0.0
+  Using cached ipython-7.9.0-py3-none-any.whl (775 kB)
+Collecting tornado>=4.2
+  Using cached tornado-6.0.4.tar.gz (496 kB)
+Collecting traitlets>=4.1.0
+  Using cached traitlets-4.3.3-py2.py3-none-any.whl (75 kB)
+Collecting jupyter-client
+  Downloading jupyter_client-6.1.3-py3-none-any.whl (106 kB)
+Collecting appnope; platform_system == "Darwin"
+  Using cached appnope-0.1.0-py2.py3-none-any.whl (4.0 kB)
+Collecting prompt-toolkit<2.1.0,>=2.0.0
+  Using cached prompt_toolkit-2.0.10-py3-none-any.whl (340 kB)
+Collecting backcall
+  Downloading backcall-0.2.0-py2.py3-none-any.whl (11 kB)
+Requirement already satisfied: setuptools>=18.5 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from ipython>=5.0.0->ipykernel) (20.10.1)
+Collecting pygments
+  Using cached Pygments-2.6.1-py3-none-any.whl (914 kB)
+Collecting pickleshare
+  Using cached pickleshare-0.7.5-py2.py3-none-any.whl (6.9 kB)
+Collecting pexpect; sys_platform != "win32"
+  Using cached pexpect-4.8.0-py2.py3-none-any.whl (59 kB)
+Collecting decorator
+  Using cached decorator-4.4.2-py2.py3-none-any.whl (9.2 kB)
+Collecting jedi>=0.10
+  Downloading jedi-0.17.0-py2.py3-none-any.whl (1.1 MB)
+Collecting ipython-genutils
+  Using cached ipython_genutils-0.2.0-py2.py3-none-any.whl (26 kB)
+Requirement already satisfied: six in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from traitlets>=4.1.0->ipykernel) (1.15.0)
+Collecting pyzmq>=13
+  Downloading pyzmq-19.0.1-cp35-cp35m-macosx_10_9_intel.whl (1.4 MB)
+Collecting jupyter-core>=4.6.0
+  Using cached jupyter_core-4.6.3-py2.py3-none-any.whl (83 kB)
+Requirement already satisfied: python-dateutil>=2.1 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from jupyter-client->ipykernel) (2.8.1)
+Collecting wcwidth
+  Using cached wcwidth-0.2.4-py2.py3-none-any.whl (30 kB)
+Collecting ptyprocess>=0.5
+  Using cached ptyprocess-0.6.0-py2.py3-none-any.whl (39 kB)
+Collecting parso>=0.7.0
+  Downloading parso-0.7.0-py2.py3-none-any.whl (100 kB)
+Using legacy setup.py install for tornado, since package 'wheel' is not installed.
+Installing collected packages: wcwidth, prompt-toolkit, backcall, pygments, pickleshare, ptyprocess, pexpect, decorator, ipython-genutils, traitlets, appnope, parso, jedi, ipython, tornado, pyzmq, jupyter-core, jupyter-client, ipykernel
+    Running setup.py install for tornado: started
+    Running setup.py install for tornado: finished with status 'done'
+Successfully installed appnope-0.1.0 backcall-0.2.0 decorator-4.4.2 ipykernel-5.3.0 ipython-7.9.0 ipython-genutils-0.2.0 jedi-0.17.0 jupyter-client-6.1.3 jupyter-core-4.6.3 parso-0.7.0 pexpect-4.8.0 pickleshare-0.7.5 prompt-toolkit-2.0.10 ptyprocess-0.6.0 pygments-2.6.1 pyzmq-19.0.1 tornado-6.0.4 traitlets-4.3.3 wcwidth-0.2.4
+Collecting pylint
+  Downloading pylint-2.5.3-py3-none-any.whl (324 kB)
+Collecting astroid<=2.5,>=2.4.0
+  Downloading astroid-2.4.2-py3-none-any.whl (213 kB)
+Collecting isort<5,>=4.2.5
+  Using cached isort-4.3.21-py2.py3-none-any.whl (42 kB)
+Collecting mccabe<0.7,>=0.6
+  Using cached mccabe-0.6.1-py2.py3-none-any.whl (8.6 kB)
+Collecting toml>=0.7.1
+  Downloading toml-0.10.1-py2.py3-none-any.whl (19 kB)
+Collecting wrapt~=1.11
+  Using cached wrapt-1.12.1.tar.gz (27 kB)
+Requirement already satisfied: six~=1.12 in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from astroid<=2.5,>=2.4.0->pylint) (1.15.0)
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/c6/5c/cc/6c6d02b313dafd1589c94715f44cb24a8aec8efa00be6b844d/typed_ast-1.4.1-cp35-cp35m-macosx_10_14_x86_64.whl
+Processing /Users/scott.coleman/Library/Caches/pip/wheels/37/cf/33/dee85e699e6fde7299b3e234d7e4a45720120b083177a7d078/lazy_object_proxy-1.4.3-cp35-cp35m-macosx_10_14_x86_64.whl
+Using legacy setup.py install for wrapt, since package 'wheel' is not installed.
+Installing collected packages: wrapt, typed-ast, lazy-object-proxy, astroid, isort, mccabe, toml, pylint
+    Running setup.py install for wrapt: started
+    Running setup.py install for wrapt: finished with status 'done'
+Successfully installed astroid-2.4.2 isort-4.3.21 lazy-object-proxy-1.4.3 mccabe-0.6.1 pylint-2.5.3 toml-0.10.1 typed-ast-1.4.1 wrapt-1.12.1
+Collecting pytest
+  Downloading pytest-5.4.3-py3-none-any.whl (248 kB)
+Requirement already satisfied: wcwidth in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from pytest) (0.2.4)
+Collecting py>=1.5.0
+  Downloading py-1.8.2-py2.py3-none-any.whl (83 kB)
+Collecting attrs>=17.4.0
+  Using cached attrs-19.3.0-py2.py3-none-any.whl (39 kB)
+Collecting pluggy<1.0,>=0.12
+  Using cached pluggy-0.13.1-py2.py3-none-any.whl (18 kB)
+Collecting packaging
+  Using cached packaging-20.4-py2.py3-none-any.whl (37 kB)
+Collecting more-itertools>=4.0.0
+  Downloading more_itertools-8.4.0-py3-none-any.whl (43 kB)
+Collecting pathlib2>=2.2.0; python_version < "3.6"
+  Using cached pathlib2-2.3.5-py2.py3-none-any.whl (18 kB)
+Collecting importlib-metadata>=0.12; python_version < "3.8"
+  Using cached importlib_metadata-1.6.1-py2.py3-none-any.whl (31 kB)
+Requirement already satisfied: six in /Users/scott.coleman/.virtualenvs/tap-amazon-advertising-dsp/lib/python3.5/site-packages (from packaging->pytest) (1.15.0)
+Collecting pyparsing>=2.0.2
+  Using cached pyparsing-2.4.7-py2.py3-none-any.whl (67 kB)
+Collecting zipp>=0.5
+  Using cached zipp-1.2.0-py2.py3-none-any.whl (4.8 kB)
+ERROR: singer-tools 0.4.1 has requirement attrs==16.3.0, but you'll have attrs 19.3.0 which is incompatible.
+Installing collected packages: py, attrs, zipp, importlib-metadata, pluggy, pyparsing, packaging, more-itertools, pathlib2, pytest
+  Attempting uninstall: attrs
+    Found existing installation: attrs 16.3.0
+    Uninstalling attrs-16.3.0:
+      Successfully uninstalled attrs-16.3.0
+Successfully installed attrs-19.3.0 importlib-metadata-1.6.1 more-itertools-8.4.0 packaging-20.4 pathlib2-2.3.5 pluggy-0.13.1 py-1.8.2 pyparsing-2.4.7 pytest-5.4.3 zipp-1.2.0
+Installed kernelspec tap-amazon-advertising-dsp in /Users/scott.coleman/Library/Jupyter/kernels/tap-amazon-advertising-dsp

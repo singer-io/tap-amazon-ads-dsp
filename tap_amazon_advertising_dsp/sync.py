@@ -15,6 +15,7 @@ from tap_amazon_advertising_dsp.schema import (DIMENSION_PRIMARY_KEYS,
 
 LOGGER = singer.get_logger()
 DEFAULT_ATTRIBUTION_WINDOW = 14
+DATE_WINDOW_SIZE = 1
 
 
 def write_schema(catalog, stream_name):
@@ -161,7 +162,7 @@ def update_currently_syncing(state, stream_name):
     LOGGER.info('Stream: {} - Currently Syncing'.format(stream_name))
 
 
-# Round start and end times based to day
+# Round time based to day
 def round_times(start=None, end=None):
     start_rounded = None
     end_rounded = None
@@ -243,21 +244,12 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     abs_start, abs_end = get_absolute_start_end_time(last_dttm,
                                                      attribution_window)
 
-    # Initialize date window
-    date_window_size = 1
     window_start = abs_start
-    window_end = (abs_start + timedelta(days=date_window_size))
-    window_start_rounded = None
-    if window_end > abs_end:
-        window_end = abs_end
-
     queued_reports = {}
 
     # DATE WINDOW LOOP
     while window_start != abs_end:
-        window_start_rounded, window_end_rounded = round_times(
-            window_start, window_end)
-        window_start_str = window_start_rounded.strftime('%Y%m%d')
+        window_start_str = window_start.strftime('%Y%m%d')
 
         LOGGER.info('Report: {} - Date window: {}'.format(
             report_name, window_start_str))
@@ -292,7 +284,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             "retries": 0
         }
 
-        window_start = window_start + timedelta(days=date_window_size)
+        window_start = window_start + timedelta(days=DATE_WINDOW_SIZE)
 
     # ASYNC report POST requests
     queued_job_ids = list(queued_reports)
@@ -311,9 +303,9 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     # *** TODO: How long to wait and what to do if exceeded? ***
     # *** TODO: Extract to method ***
     # *** TODO: Decouple report creation and data consumption
-    while len(queued_job_ids) > 0:
-        # Todo: make next
-        job_id = random.choice(queued_job_ids)
+    job_iterator = 0
+    while queued_job_ids:
+        job_id = queued_job_ids[job_iterator]
 
         # Exponential backoff to maxiumum of 256 seconds
         job_retries = queued_reports[job_id]['retries']
@@ -387,6 +379,9 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             if job_retries < 9:
                 queued_reports[job_id]['retries'] = queued_reports[job_id].get(
                     'retries') + 1
+
+        job_iterator = job_iterator + 1 if (
+            job_iterator + 1 < len(queued_job_ids)) else 0
 
     return total_records
     # End sync_report

@@ -56,9 +56,7 @@ def transform_report(report_name, report_type, report_date, report_dimensions, r
     transformed_records = []
 
     if report_type == 'AUDIENCE':
-            epoch_time = strptime_to_utc("19700101")
-            report_datetime = strptime_to_utc(str(report_date))
-            report_date_epoch = int((report_datetime - epoch_time).total_seconds())
+        report_date_epoch = date_to_epoch(report_date)
 
     for record in report_data:
         # Add report date to Audience data which API does not include
@@ -79,3 +77,9 @@ def primary_keys_for_record(report_primary_keys, record):
     for key in report_primary_keys:
         primary_keys_for_record[key] = record.get(key)
     return primary_keys_for_record
+
+
+def date_to_epoch(report_date):
+    epoch_time = strptime_to_utc("19700101")
+    report_datetime = strptime_to_utc(str(report_date))
+    return int((report_datetime - epoch_time).total_seconds())

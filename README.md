@@ -54,13 +54,31 @@ This tap:
 
     ```json
     {
-        "token": "YOUR_API_TOKEN",
-        "account_name": "YOUR_ACCOUNT_NAME",
-        "server_subdomain": "YOUR_SERVER_SUBDOMAIN",
-        "start_date": "2019-01-01T00:00:00Z",
-        "user_agent": "tap-amazon-advertising-dsp <api_user_email@your_company.com>",
-        "date_window_size": "60"
+  "client_id": "",
+  "client_secret": "",
+  "refresh_token": "",
+  "redirect_uri": "",
+  "start_date": "20200623",
+  "user_agent": "tap-amazon-advertising <user@email.com>",
+  "entities": "2389773460286997, 3393509102664206, 729665566046519, 2573518748248416",
+  "attribution_window": "0",
+  "reports": [
+    {
+      "name": "inventory_report",
+      "type": "INVENTORY",
+      "dimensions": [
+        "ORDER", "LINE_ITEM", "SITE", "SUPPLY"
+      ]
+    },
+    {
+      "name": "campaign_report",
+      "type": "CAMPAIGN",
+      "dimensions": [
+        "ORDER", "LINE_ITEM", "CREATIVE"
+      ]
     }
+  ]
+}
     ```
     
     Optionally, also create a `state.json` file. `currently_syncing` is an optional attribute used for identifying the last object to be synced in case the job is interrupted mid-stream. The next run would begin where the last job left off.
@@ -80,7 +98,7 @@ This tap:
     }
     ```
 
-4. Run the Tap in Discovery Mode
+1. Run the Tap in Discovery Mode
     This creates a catalog.json for selecting objects/fields to integrate:
     ```bash
     tap-amazon-advertising-dsp --config config.json --discover > catalog.json
@@ -88,7 +106,7 @@ This tap:
    See the Singer docs on discovery mode
    [here](https://github.com/singer-io/getting-started/blob/master/docs/DISCOVERY_MODE.md#discovery-mode).
 
-5. Run the Tap in Sync Mode (with catalog) and [write out to state file](https://github.com/singer-io/getting-started/blob/master/docs/RUNNING_AND_DEVELOPING.md#running-a-singer-tap-with-a-singer-target)
+2. Run the Tap in Sync Mode (with catalog) and [write out to state file](https://github.com/singer-io/getting-started/blob/master/docs/RUNNING_AND_DEVELOPING.md#running-a-singer-tap-with-a-singer-target)
 
     For Sync mode:
     ```bash
@@ -106,7 +124,7 @@ This tap:
     > tail -1 state.json > state.json.tmp && mv state.json.tmp state.json
     ```
 
-6. Test the Tap
+3. Test the Tap
     
     While developing the AMAZON-ADVERTISING-DSP tap, the following utilities were run in accordance with Singer.io best practices:
     Pylint to improve [code quality](https://github.com/singer-io/getting-started/blob/master/docs/BEST_PRACTICES.md#code-quality):

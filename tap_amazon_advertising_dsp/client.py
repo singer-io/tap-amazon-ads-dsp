@@ -48,8 +48,6 @@ class AmazonAdvertisingClient:
                 refresh_token=self.config.get('refresh_token'),
                 client_id=self.config.get('client_id'),
                 client_secret=self.config.get('client_secret'))
-        except Exception as ex:
-            pass
         finally:
             self.login_timer = threading.Timer(TOKEN_EXPIRATION_PERIOD,
                                                self.login)
@@ -109,7 +107,7 @@ class AmazonAdvertisingClient:
                 LOGGER.info(
                     "Received unauthorized error code, retrying: {}".format(
                         response.text))
-                self.access_token = self.get_authorization()
+                self.login()
 
             elif response.status_code == 429:
                 LOGGER.info("Received rate limit response: {}".format(
@@ -130,7 +128,7 @@ class AmazonAdvertisingClient:
 
         return response
 
-    def make_request(self, url, method):
+    def make_request(self, url, method, params, body):
         return self._make_request(url=url,
                                   method=method,
                                   params=params,
@@ -138,33 +136,7 @@ class AmazonAdvertisingClient:
 
     def download_report(self, url):
         LOGGER.info("Making {} request ({})".format('GET', url))
-
         response = requests.request('GET', url, stream=True)
-
         LOGGER.info("Received code: {}".format(response.status_code))
-
         return response
 
-    def download_gzip(self, url):
-        resp = None
-        attempts = 3
-        for i in range(attempts + 1):
-            try:
-                resp = self._make_request(url, 'GET')
-                break
-            except ConnectionError as e:
-                LOGGER.info(
-                    "Caught error while downloading gzip, sleeping: {}".format(
-                        e))
-                time.sleep(10)
-        else:
-            raise RuntimeError(
-                "Unable to sync gzip after {} attempts".format(attempts))
-
-        return self.unzip(resp.content)
-
-    @classmethod
-    def unzip(cls, blob):
-        extracted = zlib.decompress(blob, 16 + zlib.MAX_WBITS)
-        decoded = extracted.decode('utf-8')
-        return json.loads(decoded)

@@ -2,7 +2,7 @@
 import json
 import random
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
 import singer
@@ -110,12 +110,11 @@ def post_resource(client, report_name, entity, body=None):
 def get_async_data(client, stream, entity, location):
     try:
         LOGGER.info(f'Downloading report for entity {entity} from {location}')
-        response = client.download_report(location)
-        response_body = response.json()
+        return client.stream_report(location)
+        
     except Exception as err:
         LOGGER.error('Report: {} {} - ERROR: {}'.format(stream, entity, err))
         raise err
-    return response_body
 
 
 # List selected fields from stream catalog
@@ -247,7 +246,6 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     window_start = abs_start
     window_end = (abs_start + timedelta(days=date_window_size))
     window_start_rounded = None
-    window_end_rounded = None
     if window_end > abs_end:
         window_end = abs_end
 
@@ -258,7 +256,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
         window_start_rounded, window_end_rounded = round_times(
             window_start, window_end)
         window_start_str = window_start_rounded.strftime('%Y%m%d')
-
+        
         LOGGER.info('Report: {} - Date window: {}'.format(
             report_name, window_start_str))
 
@@ -306,10 +304,16 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     max_bookmark_value = 0
 
     # ASYNC RESULTS DOWNLOAD / PROCESS LOOP
+    # - Reports endpoints returns SUCCESS and URI location when report is ready  
+    # - Process queued reports keeping track of retries and adjusting backoff until report is ready
+    # *** TODO: How long to wait and what to do if exceeded? ***
+    # *** TODO: Extract to method ***
+    # *** TODO: Decouple report creation and data consumption 
     while len(queued_job_ids) > 0:
+        # Todo: make next
         job_id = random.choice(queued_job_ids)
 
-        # Exponential backoff
+        # Exponential backoff to maxiumum of 256 seconds
         job_retries = queued_reports[job_id]['retries']
         wait_sec = 2**job_retries
         LOGGER.info(
@@ -339,6 +343,8 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
                 'report_config').get('dimensions')
 
             transformed_records = transform_report(report_name,
+                                                   report_type,
+                                                   report_date,
                                                    report_dimensions,
                                                    async_data)
 
@@ -361,11 +367,13 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             queued_job_ids.remove(job_id)
 
             # Update the state with the max_bookmark_value for the stream
+            # TODO: Confirm max date is consistent across exited syncs
             if report_date > max_bookmark_value:
                 max_bookmark_value = report_date
             write_bookmark(state, report_name, entity, report_date)
         else:
             # Exponential to limit of 256 seconds
+            # Probably need a max tries and exit
             if job_retries < 9:
                 queued_reports[job_id]['retries'] = queued_reports[job_id].get(
                     'retries') + 1

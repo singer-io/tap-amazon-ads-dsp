@@ -447,8 +447,8 @@ def get_schemas(reports):
 
         mdata = metadata.get_standard_metadata(
             schema=schema,
-            key_properties=['__sdc_dimensions_hash_key'],
-            valid_replication_keys=['end_time'],
+            key_properties=['__sdc_record_hash'],
+            valid_replication_keys=['date'],
             replication_method='INCREMENTAL')
         field_metadata[report_name] = mdata
 

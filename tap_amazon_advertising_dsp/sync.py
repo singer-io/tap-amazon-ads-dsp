@@ -12,6 +12,7 @@ from tap_amazon_advertising_dsp.schema import REPORT_TYPE_DIMENSION_METRICS
 from tap_amazon_advertising_dsp.transform import transform_record, transform_report
 from tap_amazon_advertising_dsp.schema import (DIMENSION_PRIMARY_KEYS,
                                                PRIMARY_KEYS)
+import subprocess
 
 LOGGER = singer.get_logger()
 DEFAULT_ATTRIBUTION_WINDOW = 14
@@ -322,7 +323,8 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
 
         if ready:
             LOGGER.info(f'Job {job_id} ready: retrieving location {location}')
-            async_data = get_async_data(client, stream, entity, location)
+            # async_data = get_async_data(client, stream, entity, location)
+            # async_data = stream_curl(location)
 
             # time_extracted: datetime when the data was extracted from the API
             time_extracted = utils.now()
@@ -346,11 +348,11 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
 
             # PROCESS RESULTS TO TARGET RECORDS
             with metrics.record_counter(report_name) as counter:
-                for records in async_data:
+                for records in stream_curl(location):
                     if records:
                         transformed_records = transform_report(
                             report_name, report_type, report_date,
-                            report_dimensions, json.loads(records))
+                            report_dimensions, records)
                         # Transform record with Singer Transformer
                         with Transformer() as transformer:
                             for transformed_record in transformed_records:
@@ -386,6 +388,17 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     return total_records
     # End sync_report
 
+
+def stream_curl(url):  
+    process = subprocess.Popen(['/usr/bin/curl', '-s', url], stdout=subprocess.PIPE)
+
+    while True:
+        line = process.stdout.readline()
+
+        if not line:
+            break
+        else:
+            yield json.loads(line)
 
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):

@@ -11,7 +11,8 @@ setup(name='tap-amazon-ads-dsp',
       install_requires=[
           'backoff==1.8.0',
           'requests==2.23.0',
-          'singer-python==5.8.1'
+          'singer-python==5.8.1',
+          'pycurl==7.43.0.5'
       ],
       entry_points='''
           [console_scripts]

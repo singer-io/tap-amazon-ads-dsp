@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "$ref": "common.json",
+    "segmentClassCode": {
+      "type": ["null", "string"]
+    },
+    "segmentMarketplaceID": {
+      "type": ["null", "integer"]
+    },
+    "segmentSource": {
+      "type": ["null", "string"]
+    },
+    "segmentType": {
+      "type": ["null", "string"]
+    },
+    "targetingMethod": {
+      "type": ["null", "string"]
+    },
+    "intervalStart": {
+      "type": ["null", "integer"]
+    },
+    "intervalEnd": {
+      "type": ["null", "integer"]
+    },
+    "segment": {
+      "type": ["null", "string"]
+    },
+    "lineitemtype": {
+      "type": ["null", "string"]
+    }
+  }
+}

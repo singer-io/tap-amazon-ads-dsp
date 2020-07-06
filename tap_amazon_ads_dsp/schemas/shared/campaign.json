@@ -1,0 +1,325 @@
+{
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "$ref": "common.json",
+    "3PFees": {
+      "type": ["null", "number"]
+    },
+    "3pFeeAutomotive": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeAutomotiveAbsorbed": {
+      "type": ["null", "number"]
+    },
+    "3pFeeCPM1": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeCPM1Absorbed": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeCPM2": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeCPM2Absorbed": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeCPM3": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeCPM3Absorbed": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeComScore": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeComScoreAbsorbed": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeDoubleVerify": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeDoubleVerifyAbsorbed": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeDoubleclickCampaignManager": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeDoubleclickCampaignManagerAbsorbed": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeIntegralAdScience": {
+      "type": ["null", "integer"]
+    },
+    "3pFeeIntegralAdScienceAbsorbed": {
+      "type": ["null", "integer"]
+    },
+    "ROAS14d": {
+      "type": ["integer", "null"]
+    },
+    "agencyFee": {
+      "type": ["null", "number"]
+    },
+    "creativeID": {
+      "type": ["null", "integer"]
+    },
+    "creativeName": {
+      "type": ["null", "string"]
+    },
+    "creativeSize": {
+      "type": ["null", "string"]
+    },
+    "creativeType": {
+      "type": ["null", "string"]
+    },
+    "date": {
+      "type": ["null", "integer"]
+    },
+    "eRPM14d": {
+      "type": ["integer", "null"]
+    },
+    "entityId": {
+      "type": ["null", "string"]
+    },
+    "lineItemBudget": {
+      "type": ["null", "number"]
+    },
+    "lineItemEndDate": {
+      "type": ["null", "integer"]
+    },
+    "lineItemExternalId": {
+      "type": ["null", "string"]
+    },
+    "lineItemId": {
+      "type": ["null", "integer"]
+    },
+    "lineItemName": {
+      "type": ["null", "string"]
+    },
+    "lineItemStartDate": {
+      "type": ["null", "integer"]
+    },
+    "measurableImpressions": {
+      "type": ["null", "integer"]
+    },
+    "measurableRate": {
+      "type": ["null", "number"]
+    },
+    "newToBrandERPM14d": {
+      "type": ["integer", "null"]
+    },
+    "newToBrandProductSales14d": {
+      "type": ["null", "integer"]
+    },
+    "newToBrandProductSalesGBP14d": {
+      "type": ["null", "integer"]
+    },
+    "newToBrandProductSalesJPY14d": {
+      "type": ["null", "integer"]
+    },
+    "newToBrandProductSalesUSD14d": {
+      "type": ["null", "integer"]
+    },
+    "newToBrandROAS14d": {
+      "type": ["integer", "null"]
+    },
+    "newToBrandUnitsSold14d": {
+      "type": ["null", "integer"]
+    },
+    "orderBudget": {
+      "type": ["null", "number"]
+    },
+    "orderCurrency": {
+      "type": ["null", "string"]
+    },
+    "orderEndDate": {
+      "type": ["null", "integer"]
+    },
+    "orderExternalId": {
+      "type": ["null", "string"]
+    },
+    "orderId": {
+      "type": ["null", "integer"]
+    },
+    "orderName": {
+      "type": ["null", "string"]
+    },
+    "orderStartDate": {
+      "type": ["null", "integer"]
+    },
+    "sales14d": {
+      "type": ["null", "integer"]
+    },
+    "salesGBP14d": {
+      "type": ["null", "integer"]
+    },
+    "salesJPY14d": {
+      "type": ["null", "integer"]
+    },
+    "salesUSD14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToCart14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToCartCPA14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToCartCVR14d": {
+      "type": ["integer", "null"]
+    },
+    "totalAddToCartClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToCartViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToList14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToListCPA14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToListCVR14d": {
+      "type": ["integer", "null"]
+    },
+    "totalAddToListClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalAddToListViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalDetaiPageViewCPA14d": {
+      "type": ["null", "integer"]
+    },
+    "totalDetailPageClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalDetailPageViewViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalDetailPageViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalDetailPageViewsCVR14d": {
+      "type": ["integer", "null"]
+    },
+    "totalECPP14d": {
+      "type": ["null", "integer"]
+    },
+    "totalECPPRPV14d": {
+      "type": ["null", "integer"]
+    },
+    "totalERPM14d": {
+      "type": ["integer", "null"]
+    },
+    "totalFee": {
+      "type": ["null", "number"]
+    },
+    "totalNewToBrandECPP14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandERPM14d": {
+      "type": ["integer", "null"]
+    },
+    "totalNewToBrandProductSales14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandProductSalesGBP14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandProductSalesJPY14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandProductSalesUSD14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandPurchaseRate14d": {
+      "type": ["integer", "null"]
+    },
+    "totalNewToBrandPurchases14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandPurchasesClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandPurchasesViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalNewToBrandROAS14d": {
+      "type": ["integer", "null"]
+    },
+    "totalNewToBrandUnitsSold14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPRPV14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPRPVClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPRPVViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPRPVr14d": {
+      "type": ["integer", "null"]
+    },
+    "totalPercentOfPurchasesNewToBrand14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPurchaseRate14d": {
+      "type": ["integer", "null"]
+    },
+    "totalPurchases14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPurchasesClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalPurchasesViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalROAS14d": {
+      "type": ["integer", "null"]
+    },
+    "totalSales14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSalesGBP14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSalesJPY14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSalesUSD14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSubscribeAndSaveSubscriptionCPA14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSubscribeAndSaveSubscriptionCVR14d": {
+      "type": ["integer", "null"]
+    },
+    "totalSubscribeAndSaveSubscriptionClicks14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSubscribeAndSaveSubscriptionViews14d": {
+      "type": ["null", "integer"]
+    },
+    "totalSubscribeAndSaveSubscriptions14d": {
+      "type": ["null", "integer"]
+    },
+    "totalUnitsSold14d": {
+      "type": ["null", "integer"]
+    },
+    "unitsSold14d": {
+      "type": ["null", "integer"]
+    },
+    "viewabilityRate": {
+      "type": ["null", "number"]
+    },
+    "viewableImpressions": {
+      "type": ["null", "integer"]
+    }
+  }
+}

@@ -6,23 +6,18 @@ spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md).
 
 This tap:
 
-- Pulls raw data from the [**CLIENT** API](xxx)
-- Extracts the following resources:
-  - **TBD**
+- Pulls raw data from the [Amazon Advertising DSP API, Beta](https://advertising.amazon.com/API/docs/en-us/dsp-reports-beta-3p/#/Reports)
+- Extracts Asyncronous Reports using:
+  - Supports many reports, each with Report Config Settings:
+    - **Entity**: Reports are selected by entity id(Amazon Ads profile id)
+    - **Dimensions**: 5 dimensions types(ORDER, LINE_ITEM, CREATIVE, SITE, SUPPLY)
+  - async_results (download URL)
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state
 
+## Authentication
+Amazon Advertising requires authentication headers using OAuth 2 with an access token obtained via 3-legged OAuth flow. The access token, once generated, is permanent, but request tokens are short-lived without a documented expiry.
 
-## Streams
-
-[**ENDPOINT_A**](**URL**)
-- Endpoint: **URL**
-- Primary key fields: 
-- Foreign key fields: 
-- Replication strategy: INCREMENTAL (query filtered)
-  - Bookmark query fields:
-  - Bookmark: ex: modified (date-time)
-- Transformations: none
 
 ## Quick Start
 
@@ -35,7 +30,7 @@ This tap:
     > source venv/bin/activate
     > python setup.py install
     OR
-    > cd .../tap-amazon-advertising-dsp
+    > cd .../tap-amazon-ads-dsp
     > pip install .
     ```
 2. Dependent libraries
@@ -50,7 +45,7 @@ This tap:
     - [singer-tools](https://github.com/singer-io/singer-tools)
     - [target-stitch](https://github.com/singer-io/target-stitch)
 
-3. Create your tap's `config.json` file. The `api_sub_domain` is everything before `.amazon-advertising-dsp.com.` in the AMAZON-ADVERTISING-DSP URL.  The `account_name` is everything between `..com.` and `api` in the AMAZON-ADVERTISING-DSP URL. The `date_window_size` is the integer number of days (between the from and to dates) for date-windowing through the date-filtered endpoints (default = 60).
+3. Create your tap's `config.json` file. 
 
     ```json
     {
@@ -58,24 +53,22 @@ This tap:
   "client_secret": "",
   "refresh_token": "",
   "redirect_uri": "",
-  "start_date": "20200623",
+  "start_date": "2020-07-01T00:00:00Z",
   "user_agent": "tap-amazon-advertising <user@email.com>",
-  "entities": "2389773460286997, 3393509102664206, 729665566046519, 2573518748248416",
-  "attribution_window": "0",
+  "entities": "2389773460286997, 3393509102664206",
+  "attribution_window": "14",
   "reports": [
     {
       "name": "inventory_report",
-      "type": "INVENTORY",
-      "dimensions": [
-        "ORDER", "LINE_ITEM", "SITE", "SUPPLY"
-      ]
+      "type": "inventory",
     },
     {
       "name": "campaign_report",
-      "type": "CAMPAIGN",
-      "dimensions": [
-        "ORDER", "LINE_ITEM", "CREATIVE"
-      ]
+      "type": "campaign",
+    },
+    {
+      "name": "audience_report",
+      "type": "audience"
     }
   ]
 }
@@ -85,23 +78,28 @@ This tap:
 
     ```json
     {
-        "currently_syncing": "registers",
-        "bookmarks": {
-            "customers": "2019-06-11T13:37:51Z",
-            "contracts": "2019-06-19T19:48:42Z",
-            "invoices": "2019-06-18T18:23:53Z",
-            "items": "2019-06-20T00:52:44Z",
-            "transactions": "2019-06-19T19:48:45Z",
-            "registers": "2019-06-11T13:37:56Z",
-            "revenue_entries": "2019-06-19T19:48:47Z"
+    "bookmarks": {
+        "campaign_report": {
+            "2389773460286997": "20200705",
+            "3393509102664206": "20200705"
+        },
+        "inventory_report": {
+            "2389773460286997": "20200705",
+            "3393509102664206": "20200705"
+        },
+        "audience_report": {
+            "2389773460286997": "20200703",
+            "3393509102664206": "20200703"
         }
-    }
+    },
+    "currently_syncing": "audience_report"
+}
     ```
 
 1. Run the Tap in Discovery Mode
     This creates a catalog.json for selecting objects/fields to integrate:
     ```bash
-    tap-amazon-advertising-dsp --config config.json --discover > catalog.json
+    tap-amazon-ads-dsp --config config.json --discover > catalog.json
     ```
    See the Singer docs on discovery mode
    [here](https://github.com/singer-io/getting-started/blob/master/docs/DISCOVERY_MODE.md#discovery-mode).
@@ -110,17 +108,17 @@ This tap:
 
     For Sync mode:
     ```bash
-    > tap-amazon-advertising-dsp --config tap_config.json --catalog catalog.json > state.json
+    > tap-amazon-ads-dsp --config tap_config.json --catalog catalog.json > state.json
     > tail -1 state.json > state.json.tmp && mv state.json.tmp state.json
     ```
     To load to json files to verify outputs:
     ```bash
-    > tap-amazon-advertising-dsp --config tap_config.json --catalog catalog.json | target-json > state.json
+    > tap-amazon-ads-dsp --config tap_config.json --catalog catalog.json | target-json > state.json
     > tail -1 state.json > state.json.tmp && mv state.json.tmp state.json
     ```
     To pseudo-load to [Stitch Import API](https://github.com/singer-io/target-stitch) with dry run:
     ```bash
-    > tap-amazon-advertising-dsp --config tap_config.json --catalog catalog.json | target-stitch --config target_config.json --dry-run > state.json
+    > tap-amazon-ads-dsp --config tap_config.json --catalog catalog.json | target-stitch --config target_config.json --dry-run > state.json
     > tail -1 state.json > state.json.tmp && mv state.json.tmp state.json
     ```
 

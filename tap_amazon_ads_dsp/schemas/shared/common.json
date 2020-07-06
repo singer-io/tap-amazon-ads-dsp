@@ -1,0 +1,1020 @@
+{
+    "additionalProperties": false,
+    "type": "object",
+    "properties": {
+        "__sdc_record_hash": {
+            "type": ["null", "string"]
+        },
+        "entityId": {
+            "type": ["null", "string"]
+        },
+        "advertiserId": {
+            "type": ["null", "integer"]
+          },
+        "advertiserName": {
+            "type": ["null", "string"]
+        },
+        "report_date": {
+            "type": ["null", "string"]
+        },
+        "CTR": {
+            "type": ["null", "number"]
+        },
+        "accept14d": {
+            "type": ["null", "integer"]
+        },
+        "acceptCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "acceptCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "acceptClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "acceptViews14d": {
+            "type": ["null", "integer"]
+        },
+        "addToWatchlist14d": {
+            "type": ["null", "integer"]
+        },
+        "addToWatchlistCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "addToWatchlistCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "addToWatchlistClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "addToWatchlistViews14d": {
+            "type": ["null", "integer"]
+        },
+        "addedToShoppingCart14d": {
+            "type": ["null", "integer"]
+        },
+        "addedToShoppingCartCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "addedToShoppingCartCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "addedToShoppingCartClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "addedToShoppingCartViews14d": {
+            "type": ["null", "integer"]
+        },
+        "advertiserCountry": {
+            "type": ["null", "string"]
+        },
+        "advertiserTimezone": {
+            "type": ["null", "string"]
+        },
+        "amazonAudienceFee": {
+            "type": ["null", "integer"]
+        },
+        "amazonPlatformFee": {
+            "type": ["null", "number"]
+        },
+        "application14d": {
+            "type": ["null", "integer"]
+        },
+        "applicationCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "applicationCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "applicationClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "applicationViews14d": {
+            "type": ["null", "integer"]
+        },
+        "atc14d": {
+            "type": ["null", "integer"]
+        },
+        "atcClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "atcViews14d": {
+            "type": ["null", "integer"]
+        },
+        "atcr14d": {
+            "type": ["integer", "null"]
+        },
+        "atl14d": {
+            "type": ["null", "integer"]
+        },
+        "atlClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "atlViews14d": {
+            "type": ["null", "integer"]
+        },
+        "atlr14d": {
+            "type": ["integer", "null"]
+        },
+        "bannerInteraction14d": {
+            "type": ["null", "integer"]
+        },
+        "bannerInteractionCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "bannerInteractionCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "bannerInteractionClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "bannerInteractionViews14d": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement1": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement1CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement1CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement1Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement1Views": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement2": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement2CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement2CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement2Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement2Views": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement3": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement3CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement3CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement3Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement3Views": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement4": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement4CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement4CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement4Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement4Views": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement5": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement5CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement5CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement5Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement5Views": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement6": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement6CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement6CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement6Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement6Views": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement7": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement7CPA": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement7CVR": {
+            "type": ["integer", "null"]
+        },
+        "brandStoreEngagement7Clicks": {
+            "type": ["null", "integer"]
+        },
+        "brandStoreEngagement7Views": {
+            "type": ["null", "integer"]
+        },
+        "clickOnRedirect14d": {
+            "type": ["null", "integer"]
+        },
+        "clickOnRedirectCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "clickOnRedirectCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "clickOnRedirectClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "clickOnRedirectViews14d": {
+            "type": ["null", "integer"]
+        },
+        "clickThroughs": {
+            "type": ["null", "integer"]
+        },
+        "decline14d": {
+            "type": ["null", "integer"]
+        },
+        "declineCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "declineCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "declineClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "declineViews14d": {
+            "type": ["null", "integer"]
+        },
+        "downloadedVideoPlayRate14d": {
+            "type": ["integer", "null"]
+        },
+        "downloadedVideoPlays14d": {
+            "type": ["null", "integer"]
+        },
+        "downloadedVideoPlaysClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "downloadedVideoPlaysViews14d": {
+            "type": ["null", "integer"]
+        },
+        "dpv14d": {
+            "type": ["null", "integer"]
+        },
+        "dpvClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "dpvViews14d": {
+            "type": ["null", "integer"]
+        },
+        "dpvr14d": {
+            "type": ["integer", "null"]
+        },
+        "dropDownSelection14d": {
+            "type": ["null", "integer"]
+        },
+        "dropDownSelectionCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "dropDownSelectionCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "dropDownSelectionClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "dropDownSelectionViews14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPAtc14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPAtl14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPC": {
+            "type": ["null", "number"]
+        },
+        "eCPDPV14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPDVP14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPM": {
+            "type": ["null", "number"]
+        },
+        "eCPP14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPPRPV14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPPT14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPVS14d": {
+            "type": ["null", "integer"]
+        },
+        "eCPnewSubscribeAndSave14d": {
+            "type": ["null", "integer"]
+        },
+        "ecpr14d": {
+            "type": ["null", "integer"]
+        },
+        "ecpvc": {
+            "type": ["null", "integer"]
+        },
+        "ecpvd14d": {
+            "type": ["null", "integer"]
+        },
+        "emailInteraction14d": {
+            "type": ["null", "integer"]
+        },
+        "emailInteractionCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "emailInteractionCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "emailInteractionClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "emailInteractionViews14d": {
+            "type": ["null", "integer"]
+        },
+        "emailLoad14d": {
+            "type": ["null", "integer"]
+        },
+        "emailLoadCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "emailLoadCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "emailLoadClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "emailLoadViews14d": {
+            "type": ["null", "integer"]
+        },
+        "gameInteraction14d": {
+            "type": ["null", "integer"]
+        },
+        "gameInteractionCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "gameInteractionCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "gameInteractionClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "gameInteractionViews14d": {
+            "type": ["null", "integer"]
+        },
+        "gameLoad14d": {
+            "type": ["null", "integer"]
+        },
+        "gameLoadCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "gameLoadCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "gameLoadClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "gameLoadViews14d": {
+            "type": ["null", "integer"]
+        },
+        "homepageVisit14d": {
+            "type": ["null", "integer"]
+        },
+        "homepageVisitCPA14d": {
+            "type": ["integer", "null"]
+        },
+        "homepageVisitCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "homepageVisitClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "homepageVisitViews14d": {
+            "type": ["null", "integer"]
+        },
+        "impressions": {
+            "type": ["null", "integer"]
+        },
+        "marketingLandingPage14d": {
+            "type": ["null", "integer"]
+        },
+        "marketingLandingPageCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "marketingLandingPageCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "marketingLandingPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "marketingLandingPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToCart14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToCartCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToCartClickCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "mashupAddToCartClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToCartViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToWishlist14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToWishlistCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToWishlistCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "mashupAddToWishlistClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupAddToWishlistViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupBackupImage": {
+            "type": ["null", "integer"]
+        },
+        "mashupBackupImageCPA": {
+            "type": ["null", "integer"]
+        },
+        "mashupBackupImageCVR": {
+            "type": ["integer", "null"]
+        },
+        "mashupBackupImageClicks": {
+            "type": ["null", "integer"]
+        },
+        "mashupBackupImageViews": {
+            "type": ["null", "integer"]
+        },
+        "mashupClickToPage": {
+            "type": ["null", "integer"]
+        },
+        "mashupClickToPageCPA": {
+            "type": ["null", "integer"]
+        },
+        "mashupClickToPageCVR": {
+            "type": ["integer", "null"]
+        },
+        "mashupClickToPageClicks": {
+            "type": ["null", "integer"]
+        },
+        "mashupClickToPageViews": {
+            "type": ["null", "integer"]
+        },
+        "mashupClipCouponClick14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupClipCouponClickCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupClipCouponClickCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "mashupClipCouponClickClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupClipCouponClickViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupShopNowClick14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupShopNowClickCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupShopNowClickCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "mashupShopNowClickClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupShopNowClickViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupSubscribeAndSave14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupSubscribeAndSaveCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupSubscribeAndSaveCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "mashupSubscribeAndSaveClick14d": {
+            "type": ["null", "integer"]
+        },
+        "mashupSubscribeAndSaveClickViews14d": {
+            "type": ["null", "integer"]
+        },
+        "messageSent14d": {
+            "type": ["null", "integer"]
+        },
+        "messageSentCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "messageSentCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "messageSentClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "messageSentViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mobileAppFirstStartCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "mobileAppFirstStartClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "mobileAppFirstStartViews14d": {
+            "type": ["null", "integer"]
+        },
+        "mobileAppFirstStarts14d": {
+            "type": ["null", "integer"]
+        },
+        "mobileAppFirstStartsCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "newSubscribeAndSave14d": {
+            "type": ["null", "integer"]
+        },
+        "newSubscribeAndSaveClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "newSubscribeAndSaveRate14d": {
+            "type": ["integer", "null"]
+        },
+        "newSubscribeAndSaveViews14d": {
+            "type": ["null", "integer"]
+        },
+        "newToBrandECPP14d": {
+            "type": ["null", "integer"]
+        },
+        "newToBrandPurchaseRate14d": {
+            "type": ["integer", "null"]
+        },
+        "newToBrandPurchases14d": {
+            "type": ["null", "integer"]
+        },
+        "newToBrandPurchasesClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "newToBrandPurchasesViews14d": {
+            "type": ["null", "integer"]
+        },
+        "pRPV14d": {
+            "type": ["null", "integer"]
+        },
+        "pRPVClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "pRPVViews14d": {
+            "type": ["null", "integer"]
+        },
+        "pRPVr14d": {
+            "type": ["integer", "null"]
+        },
+        "percentOfPurchasesNewToBrand14d": {
+            "type": ["null", "integer"]
+        },
+        "playTrailerRate14d": {
+            "type": ["integer", "null"]
+        },
+        "playTrailers14d": {
+            "type": ["null", "integer"]
+        },
+        "playTrailersViews14d": {
+            "type": ["null", "integer"]
+        },
+        "playerTrailersClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "productPurchased": {
+            "type": ["null", "integer"]
+        },
+        "productPurchasedCPA": {
+            "type": ["null", "integer"]
+        },
+        "productPurchasedCVR": {
+            "type": ["integer", "null"]
+        },
+        "productPurchasedClicks": {
+            "type": ["null", "integer"]
+        },
+        "productPurchasedViews": {
+            "type": ["null", "integer"]
+        },
+        "purchaseButton14d": {
+            "type": ["null", "integer"]
+        },
+        "purchaseButtonCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "purchaseButtonCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "purchaseButtonClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "purchaseButtonViews14d": {
+            "type": ["null", "integer"]
+        },
+        "purchaseRate14d": {
+            "type": ["integer", "null"]
+        },
+        "purchases14d": {
+            "type": ["null", "integer"]
+        },
+        "purchasesClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "purchasesViews14d": {
+            "type": ["null", "integer"]
+        },
+        "referral14d": {
+            "type": ["null", "integer"]
+        },
+        "referralCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "referralCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "referralClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "referralViews14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationConfirmPage14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationConfirmPageCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationConfirmPageCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "registrationConfirmPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationConfirmPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationForm14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationFormCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationFormCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "registrationFormClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "registrationFormViews14d": {
+            "type": ["null", "integer"]
+        },
+        "rentalRate14d": {
+            "type": ["integer", "null"]
+        },
+        "rentals14d": {
+            "type": ["null", "integer"]
+        },
+        "rentalsClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "rentalsViews14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpButton14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpButtonCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpButtonCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "signUpButtonClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpButtonViews14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpPage14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpPageCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpPageCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "signUpPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "signUpPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "storeLocatorPage14d": {
+            "type": ["null", "integer"]
+        },
+        "storeLocatorPageCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "storeLocatorPageCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "storeLocatorPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "storeLocatorPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "submitButton14d": {
+            "type": ["null", "integer"]
+        },
+        "submitButtonCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "submitButtonCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "submitButtonClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "submitButtonViews14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionButton14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionButtonCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionButtonCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "subscriptionButtonClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionButtonViews14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionPage14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionPageCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionPageCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "subscriptionPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "subscriptionPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "successPage14d": {
+            "type": ["null", "integer"]
+        },
+        "successPageCPA14d": {
+            "type": ["null", "number"]
+        },
+        "successPageCVR14d": {
+            "type": ["null", "number"]
+        },
+        "successPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "successPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "supplyCost": {
+            "type": ["null", "number"]
+        },
+        "surveyFinish14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyFinishCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyFinishCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "surveyFinishClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyFinishViews14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyStart14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyStartCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyStartCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "surveyStartClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "surveyStartViews14d": {
+            "type": ["null", "integer"]
+        },
+        "thankYouPage14d": {
+            "type": ["null", "integer"]
+        },
+        "thankYouPageCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "thankYouPageCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "thankYouPageClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "thankYouPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "totalCost": {
+            "type": ["null", "number"]
+        },
+        "totalPixel14d": {
+            "type": ["null", "integer"]
+        },
+        "totalPixelCPA14d": {
+            "type": ["null", "number"]
+        },
+        "totalPixelCVR14d": {
+            "type": ["null", "number"]
+        },
+        "totalPixelClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "totalPixelViews14d": {
+            "type": ["null", "integer"]
+        },
+        "videoComplete": {
+            "type": ["null", "integer"]
+        },
+        "videoCompleted": {
+            "type": ["null", "integer"]
+        },
+        "videoCompletedCPA": {
+            "type": ["null", "integer"]
+        },
+        "videoCompletedCVR": {
+            "type": ["integer", "null"]
+        },
+        "videoCompletedViews": {
+            "type": ["null", "integer"]
+        },
+        "videoCompletionRate": {
+            "type": ["null", "integer"]
+        },
+        "videoDownloadRate14d": {
+            "type": ["integer", "null"]
+        },
+        "videoDownloads14d": {
+            "type": ["null", "integer"]
+        },
+        "videoDownloadsClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "videoDownloadsViews14d": {
+            "type": ["null", "integer"]
+        },
+        "videoEndClicks": {
+            "type": ["null", "integer"]
+        },
+        "videoFirstQuartile": {
+            "type": ["null", "integer"]
+        },
+        "videoMidpoint": {
+            "type": ["null", "integer"]
+        },
+        "videoMute": {
+            "type": ["null", "integer"]
+        },
+        "videoPause": {
+            "type": ["null", "integer"]
+        },
+        "videoResume": {
+            "type": ["null", "integer"]
+        },
+        "videoStart": {
+            "type": ["null", "integer"]
+        },
+        "videoStarted": {
+            "type": ["null", "integer"]
+        },
+        "videoStartedCPA": {
+            "type": ["null", "integer"]
+        },
+        "videoStartedCVR": {
+            "type": ["integer", "null"]
+        },
+        "videoStartedClicks": {
+            "type": ["null", "integer"]
+        },
+        "videoStartedViews": {
+            "type": ["null", "integer"]
+        },
+        "videoStreams14d": {
+            "type": ["null", "integer"]
+        },
+        "videoStreamsClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "videoStreamsRate14d": {
+            "type": ["integer", "null"]
+        },
+        "videoStreamsViews14d": {
+            "type": ["null", "integer"]
+        },
+        "videoThirdQuartile": {
+            "type": ["null", "integer"]
+        },
+        "videoUnmute": {
+            "type": ["null", "integer"]
+        },
+        "widgetInteraction14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetInteractionCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetInteractionCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "widgetInteractionClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetInteractionViews14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetLoad14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetLoadCPA14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetLoadCVR14d": {
+            "type": ["integer", "null"]
+        },
+        "widgetLoadClicks14d": {
+            "type": ["null", "integer"]
+        },
+        "widgetLoadViews14d": {
+            "type": ["null", "integer"]
+        }
+    }
+}

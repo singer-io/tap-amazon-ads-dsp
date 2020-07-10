@@ -1,0 +1,292 @@
+{
+  "additional_properties": false,
+  "type": "object",
+  "properties": {
+    "$ref": "common.json",
+    "3p_fee_double_verify": {
+      "type": ["null", "integer"]
+    },
+    "viewability_rate": {
+      "type": ["null", "number"],
+"multipleOf": 1e-20
+    },
+    "total_add_to_list14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_list_cpa14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_purchases14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_doubleclick_campaign_manager_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_purchases_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "sales14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_cpm2_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_integral_ad_science": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_integral_ad_science_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "total_detail_page_views14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_com_score": {
+      "type": ["null", "integer"]
+    },
+    "total_detail_page_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "total_detail_page_views_cvr14d": {
+      "type": ["integer", "null"]
+    },
+    "3p_fee_cpm3": {
+      "type": ["null", "integer"]
+    },
+    "total_sales14d": {
+      "type": ["null", "integer"]
+    },
+    "total_subscribe_and_save_subscriptions14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_automotive": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_list_cvr14d": {
+      "type": ["integer", "null"]
+    },
+    "total_new_to_brand_ecpp14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_doubleclick_campaign_manager": {
+      "type": ["null", "integer"]
+    },
+    "creative_size": {
+      "type": ["null", "string"]
+    },
+    "total_fee": {
+      "type": ["null", "number"],
+"multipleOf": 1e-20
+    },
+    "total_add_to_list_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "measurable_impressions": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_cpm1_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_com_score_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "total_detail_page_view_views14d": {
+      "type": ["null", "integer"]
+    },
+    "e_rpm14d": {
+      "type": ["integer", "null"]
+    },
+    "total_new_to_brand_product_sales_usd14d": {
+      "type": ["null", "integer"]
+    },
+    "total_percent_of_purchases_new_to_brand14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_cart14d": {
+      "type": ["null", "integer"]
+    },
+    "new_to_brand_product_sales_usd14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_roas14d": {
+      "type": ["integer", "null"]
+    },
+    "total_purchases_views14d": {
+      "type": ["null", "integer"]
+    },
+    "new_to_brand_product_sales_gbp14d": {
+      "type": ["null", "integer"]
+    },
+    "total_sales_gbp14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_purchase_rate14d": {
+      "type": ["integer", "null"]
+    },
+    "creative_type": {
+      "type": ["null", "string"]
+    },
+    "new_to_brand_product_sales_jpy14d": {
+      "type": ["null", "integer"]
+    },
+    "total_subscribe_and_save_subscription_cpa14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_purchases_views14d": {
+      "type": ["null", "integer"]
+    },
+    "roas14d": {
+      "type": ["integer", "null"]
+    },
+    "total_new_to_brand_product_sales14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_erpm14d": {
+      "type": ["integer", "null"]
+    },
+    "total_prpv_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "total_subscribe_and_save_subscription_cvr14d": {
+      "type": ["integer", "null"]
+    },
+    "total_ecpprpv14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_product_sales_jpy14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_units_sold14d": {
+      "type": ["null", "integer"]
+    },
+    "total_new_to_brand_product_sales_gbp14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_list_views14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_cpm3_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "total_purchases_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_automotive_absorbed": {
+      "type": ["null", "number"],
+"multipleOf": 1e-20
+    },
+    "total_prp_vr14d": {
+      "type": ["integer", "null"]
+    },
+    "total_sales_jpy14d": {
+      "type": ["null", "integer"]
+    },
+    "agency_fee": {
+      "type": ["null", "number"],
+"multipleOf": 1e-20
+    },
+    "measurable_rate": {
+      "type": ["null", "number"],
+"multipleOf": 1e-20
+    },
+    "creative_id": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_cpm2": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_cpm1": {
+      "type": ["null", "integer"]
+    },
+    "units_sold14d": {
+      "type": ["null", "integer"]
+    },
+    "new_to_brand_product_sales14d": {
+      "type": ["null", "integer"]
+    },
+    "new_to_brand_units_sold14d": {
+      "type": ["null", "integer"]
+    },
+    "total_sales_usd14d": {
+      "type": ["null", "integer"]
+    },
+    "3_p_fees": {
+      "type": ["null", "number"],
+"multipleOf": 1e-20
+    },
+    "total_purchase_rate14d": {
+      "type": ["integer", "null"]
+    },
+    "sales_gbp14d": {
+      "type": ["null", "integer"]
+    },
+    "new_to_brand_erpm14d": {
+      "type": ["integer", "null"]
+    },
+    "total_purchases14d": {
+      "type": ["null", "integer"]
+    },
+    "total_units_sold14d": {
+      "type": ["null", "integer"]
+    },
+    "total_erpm14d": {
+      "type": ["integer", "null"]
+    },
+    "entity_id": {
+      "type": ["null", "string"]
+    },
+    "total_ecpp14d": {
+      "type": ["null", "integer"]
+    },
+    "total_roas14d": {
+      "type": ["integer", "null"]
+    },
+    "sales_usd14d": {
+      "type": ["null", "integer"]
+    },
+    "total_prpv14d": {
+      "type": ["null", "integer"]
+    },
+    "total_detai_page_view_cpa14d": {
+      "type": ["null", "integer"]
+    },
+    "sales_jpy14d": {
+      "type": ["null", "integer"]
+    },
+    "new_to_brand_roas14d": {
+      "type": ["integer", "null"]
+    },
+    "date": {
+      "type": ["null", "integer"]
+    },
+    "total_prpv_views14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_cart_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "viewable_impressions": {
+      "type": ["null", "integer"]
+    },
+    "total_subscribe_and_save_subscription_clicks14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_cart_cpa14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_cart_views14d": {
+      "type": ["null", "integer"]
+    },
+    "total_add_to_cart_cvr14d": {
+      "type": ["integer", "null"]
+    },
+    "total_subscribe_and_save_subscription_views14d": {
+      "type": ["null", "integer"]
+    },
+    "3p_fee_double_verify_absorbed": {
+      "type": ["null", "integer"]
+    },
+    "creative_name": {
+      "type": ["null", "string"]
+    }
+  }
+}

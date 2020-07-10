@@ -8,6 +8,7 @@ import requests_oauthlib
 import singer
 import singer.metrics
 import time
+import csv
 
 LOGGER = singer.get_logger()  # noqa
 
@@ -136,3 +137,13 @@ class AmazonAdvertisingClient:
                 if line:
                     yield line
 
+
+@backoff.on_exception(backoff.expo,
+                        (Server5xxError, ConnectionError, Server42xRateLimitError),
+                        max_tries=5,
+                        factor=2)
+def stream_csv(url):
+    with requests.get(url, stream=True) as data:
+        reader = csv.DictReader(data.iter_lines())
+        for record in reader:
+            yield record

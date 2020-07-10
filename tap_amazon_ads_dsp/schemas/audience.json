@@ -1,33 +1,33 @@
 {
-  "additionalProperties": false,
+  "additional_properties": false,
   "type": "object",
   "properties": {
     "$ref": "common.json",
-    "segmentClassCode": {
+    "line_item_type": {
       "type": ["null", "string"]
     },
-    "segmentMarketplaceID": {
+    "segment_class_code": {
+      "type": ["null", "string"]
+    },
+    "targeting_method": {
+      "type": ["null", "string"]
+    },
+    "segment_marketplace_id": {
       "type": ["null", "integer"]
     },
-    "segmentSource": {
-      "type": ["null", "string"]
-    },
-    "segmentType": {
-      "type": ["null", "string"]
-    },
-    "targetingMethod": {
-      "type": ["null", "string"]
-    },
-    "intervalStart": {
+    "interval_start": {
       "type": ["null", "integer"]
     },
-    "intervalEnd": {
+    "interval_end": {
       "type": ["null", "integer"]
+    },
+    "segment_type": {
+      "type": ["null", "string"]
     },
     "segment": {
       "type": ["null", "string"]
     },
-    "lineitemtype": {
+    "segment_source": {
       "type": ["null", "string"]
     }
   }

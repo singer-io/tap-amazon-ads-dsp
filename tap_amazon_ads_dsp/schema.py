@@ -246,7 +246,10 @@ report_dimension_metrics = {
     }
 }
 
-# default_dimension_fields = ['entityId', 'advertiserId', 'reportDate']
+dimension_fields = ["lineItemBudget", "orderId", "lineItemExternalId", "orderStartDate", "orderBudget", 
+"lineItemStartDate", "date", "siteName", "orderExternalId", "orderEndDate", "supplySourceName", 
+"lineItemName", "lineItemId", "report_date", "orderName", "orderCurrency", "advertiserName", 
+"__sdc_record_hash", "advertiserId", "lineItemEndDate", "entityId"]
 
 dimension_primary_keys = {
     "ORDER": [
@@ -328,7 +331,7 @@ def get_schemas(reports):
         report_type = report.get('type')
         report_dimensions = report_dimension_metrics.get(report_type).get('dimensions')
 
-        report_path = get_abs_path(f'schemas/shared/{report_type.lower()}.json')
+        report_path = get_abs_path(f'schemas/{report_type.lower()}.json')
 
         with open(report_path) as file:
             schema = json.load(file)

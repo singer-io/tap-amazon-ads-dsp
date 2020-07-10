@@ -9,9 +9,11 @@ import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
 from tap_amazon_ads_dsp.transform import transform_report
-from tap_amazon_ads_dsp.schema import (dimension_primary_keys,
-                                               report_dimension_metrics)
+from tap_amazon_ads_dsp.schema import (dimension_primary_keys, report_dimension_metrics, dimension_fields)
 import subprocess
+import requests
+import csv
+import codecs
 
 LOGGER = singer.get_logger()
 DEFAULT_ATTRIBUTION_WINDOW = 14
@@ -223,7 +225,7 @@ def to_epoch(dttm):
     return int((dttm - epoch_time).total_seconds())
 
 def sync_report(client, catalog, state, start_date, report_name, report_config,
-                tap_config, entity):
+                tap_config, entity, selected_fields):
 
     # PROCESS:
     # Outer-outer loop (in sync): loop through accounts
@@ -261,14 +263,22 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
         LOGGER.info('Report: {} - Date window: {}'.format(
             report_name, window_start_str))
 
+        # Dimensions for API request
         api_dimensions = report_config.get('dimensions', report_dimension_metrics.get(report_type).get('dimensions'))
 
         report_config = {
             'reportDate': window_start_str,
-            'format': 'JSON',
+            'format': 'CSV',
             'type': report_type.upper(),
             'dimensions': api_dimensions
         }
+
+        # Add selected metrics for API request
+        if not tap_config.get('all_metrics'):
+            selected_metrics = ""
+            for selected in selected_fields:
+                if selected not in dimension_fields:
+                    selected_metrics = selected if not selected_metrics else selected_metrics + ',' + selected
 
         if advertiser_ids:
             report_config['advertiserIds'] = advertiser_ids
@@ -331,7 +341,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
 
             # PROCESS RESULTS TO TARGET RECORDS
             with metrics.record_counter(report_name) as counter:
-                for records in stream_curl(location):
+                for records in stream_csv(location):
                     if records:
                         transformed_records = transform_report(
                             report_name, report_type, report_dttm,
@@ -372,16 +382,33 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     # End sync_report
 
 
-def stream_curl(url):  
-    process = subprocess.Popen(['/usr/bin/curl', '-s', url], stdout=subprocess.PIPE)
+# def stream_curl(url):  
+#     process = subprocess.Popen(['/usr/bin/curl', '-s', url], stdout=subprocess.PIPE)
 
-    while True:
-        line = process.stdout.readline()
+#     while True:
+#         line = process.stdout.readline()
 
-        if not line:
-            break
-        else:
-            yield json.loads(line)
+#         if not line:
+#             break
+#         else:
+#             yield json.loads(line)
+
+def stream_csv(url):
+    with requests.get(url, stream=True) as data:
+        reader = csv.DictReader(codecs.iterdecode(data.iter_lines(), 'utf-8'))
+        count = 0
+        # for record in reader:
+        #     yield record
+        batch = []
+        for record in reader:
+            while count < 1000:
+                batch.append(record)
+                count = count + 1
+            yield batch
+
+    #      lines = (line.decode('utf-8') for line in data.iter_lines())
+    # for row in csv.reader(lines):
+    #     yield(row)
 
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
@@ -439,7 +466,8 @@ def sync(client, config, catalog, state):
                                         report_name=report_name,
                                         report_config=report,
                                         tap_config=config,
-                                        entity=entity)
+                                        entity=entity,
+                                        selected_fields=selected_fields)
 
             total_entity_records = total_entity_records + total_records
             # pylint: disable=line-too-long

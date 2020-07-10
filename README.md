@@ -57,6 +57,7 @@ Amazon Advertising requires authentication headers using OAuth 2 with an access 
   "user_agent": "tap-amazon-advertising <user@email.com>",
   "entities": "2389773460286997, 3393509102664206",
   "attribution_window": "14",
+  "all_metrics": true,
   "reports": [
     {
       "name": "inventory_report",

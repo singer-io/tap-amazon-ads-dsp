@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "$ref": "common.json",
-    "3p_fee_double_verify": {
+    "3pFeeDoubleVerify": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -21,7 +21,7 @@
     "totalNewToBrandPurchases14d": {
       "type": ["null", "integer"]
     },
-    "3p_fee_doubleclick_campaign_manager_absorbed": {
+    "3pFeeDoubleclickCampaignManagerAbsorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -32,22 +32,22 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "3p_fee_cpm2_absorbed": {
+    "3pFeeCPM2Absorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "3p_fee_integral_ad_science": {
+    "3pFeeIntegralAdScience": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "3p_fee_integral_ad_science_absorbed": {
+    "3pFeeIntegralAdScienceAbsorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
     "totalDetailPageViews14d": {
       "type": ["null", "integer"]
     },
-    "3p_fee_com_score": {
+    "3pFeeComScore": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -58,7 +58,7 @@
       "type": ["number", "null"],
       "multipleOf": 0.000001
     },
-    "3p_fee_cpm3": {
+    "3pFeeCPM3": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -69,7 +69,7 @@
     "totalSubscribeAndSaveSubscriptions14d": {
       "type": ["null", "integer"]
     },
-    "3p_fee_automotive": {
+    "3pFeeAutomotive": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -81,7 +81,7 @@
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
-    "3p_fee_doubleclick_campaign_manager": {
+    "3pFeeDoubleclickCampaignManager": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -98,11 +98,11 @@
     "measurableImpressions": {
       "type": ["null", "integer"]
     },
-    "3p_fee_cpm1_absorbed": {
+    "3pFeeCPM1Absorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "3p_fee_com_score_absorbed": {
+    "3pFeeComScoreAbsorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },

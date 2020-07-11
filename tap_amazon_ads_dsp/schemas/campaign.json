@@ -138,7 +138,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "totalSalesGPB14d": {
+    "totalSalesGBP14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -183,25 +183,25 @@
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
-    "total_new_to_brand_product_sales_jpy14d": {
+    "totalNewToBrandProductSalesJPY14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "total_new_to_brand_units_sold14d": {
+    "totalNewToBrandUnitsSold14d": {
       "type": ["null", "integer"]
     },
-    "total_new_to_brand_product_sales_gbp14d": {
+    "totalNewToBrandProductSalesGBP14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "total_add_to_list_views14d": {
+    "totalAddToListViews14d": {
       "type": ["null", "integer"]
     },
     "3p_fee_cpm3_absorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "total_purchases_clicks14d": {
+    "totalPurchasesClicks14d": {
       "type": ["null", "integer"]
     },
     "3p_fee_automotive_absorbed": {
@@ -212,15 +212,15 @@
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
-    "total_sales_jpy14d": {
+    "totalSalesJPY14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "agency_fee": {
+    "agencyFee": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "measurable_rate": {
+    "measurableRate": {
       "type": ["null", "number"],
       "multipleOf": 0.0001
     },
@@ -245,7 +245,7 @@
     "new_to_brand_units_sold14d": {
       "type": ["null", "integer"]
     },
-    "total_sales_usd14d": {
+    "totalSalesUSD14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -253,32 +253,32 @@
       "type": ["null", "number"],
       "multipleOf": 0.000001
     },
-    "total_purchase_rate14d": {
+    "totalPurchaseRate14d": {
       "type": ["number", "null"],
       "multipleOf": 0.0001
     },
-    "sales_gbp14d": {
+    "salesGBP14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "new_to_brand_erpm14d": {
+    "newToBrandERPM14d": {
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
-    "total_purchases14d": {
+    "totalPurchases14d": {
       "type": ["null", "integer"]
     },
-    "total_units_sold14d": {
+    "totalUnitsSold14d": {
       "type": ["null", "integer"]
     },
-    "total_erpm14d": {
+    "totalERPM14d": {
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
-    "entity_id": {
+    "entityId": {
       "type": ["null", "string"]
     },
-    "total_ecpp14d": {
+    "totalECPP14d": {
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
@@ -286,19 +286,19 @@
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
-    "sales_usd14d": {
+    "salesUSD14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "total_prpv14d": {
+    "totalPRPV14d": {
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
-    "total_detai_page_view_cpa14d": {
+    "totalDetaiPageViewCPA14d": {
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
-    "sales_jpy14d": {
+    "salesJPY14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },

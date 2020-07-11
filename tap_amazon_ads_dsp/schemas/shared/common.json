@@ -43,48 +43,48 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "banner_interaction_views14d": {
+        "bannerInteractionViews14d": {
             "type": ["null", "integer"]
         },
-        "survey_finish_clicks14d": {
+        "surveyFinishClicks14d": {
             "type": ["null", "integer"]
         },
-        "amazon_audience_fee": {
+        "amazonAudienceFee": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
         },
-        "new_subscribe_and_save_clicks14d": {
+        "newSubscribeAndSaveClicks14d": {
             "type": ["null", "integer"]
         },
-        "added_to_shopping_cart_cvr14d": {
+        "addedToShoppingCartCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "click_on_redirect_cpa14d": {
+        "clickOnRedirectCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "game_interaction_cpa14d": {
+        "gameInteractionCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "accept_clicks14d": {
+        "acceptClicks14d": {
             "type": ["null", "integer"]
         },
-        "sign_up_page_views14d": {
+        "signUpPageViews14d": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement2": {
+        "brandStoreEngagement2": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement7_cpa": {
+        "brandStoreEngagement7CPA": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "atc_clicks14d": {
+        "atcClicks14d": {
             "type": ["null", "integer"]
         },
-        "p_rpv_clicks14d": {
+        "pRPVClicks14d": {
             "type": ["null", "integer"]
         },
         "ecpvd14d": {
@@ -102,7 +102,7 @@
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "e_c_pnew_subscribe_and_save14d": {
+        "eCPnewSubscribeAndSave14d": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
@@ -154,72 +154,72 @@
         "dropDownSelectionViews14d": {
             "type": ["null", "integer"]
         },
-        "message_sent_views14d": {
+        "messageSentViews14d": {
             "type": ["null", "integer"]
         },
-        "mashup_add_to_cart_clicks14d": {
+        "mashupAddToCartClicks14d": {
             "type": ["null", "integer"]
         },
-        "mashup_click_to_page_views": {
+        "mashupClickToPageViews": {
             "type": ["null", "integer"]
         },
         "e_cp_atl14d": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "store_locator_page14d": {
+        "storeLocatorPage14d": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "brand_store_engagement6_cvr": {
+        "brandStoreEngagement6CVR": {
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "downloaded_video_plays_clicks14d": {
+        "downloadedVideoPlaysClicks14d": {
             "type": ["null", "integer"]
         },
-        "game_load14d": {
+        "gameLoad14d": {
             "type": ["null", "integer"]
         },
-        "line_item_budget": {
+        "lineItemBudget": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
-        "sign_up_button_views14d": {
+        "signUpButtonViews14d": {
             "type": ["null", "integer"]
         },
-        "mashup_add_to_cart_cpa14d": {
+        "mashupAddToCartCPA14d": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "video_started_clicks": {
+        "videoStartedClicks": {
             "type": ["null", "integer"]
         },
-        "message_sent14d": {
+        "messageSent14d": {
             "type": ["null", "integer"]
         },
-        "submit_button_views14d": {
+        "submitButtonViews14d": {
             "type": ["null", "integer"]
         },
-        "survey_start14d": {
+        "surveyStart14d": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement2_views": {
+        "brandStoreEngagement2Views": {
             "type": ["null", "integer"]
         },
-        "play_trailer_rate14d": {
+        "playTrailerRate14d": {
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "email_interaction_cvr14d": {
+        "emailInteractionCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "survey_start_cvr14d": {
+        "surveyStartCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "brand_store_engagement6_views": {
+        "brandStoreEngagement6Views": {
             "type": ["null", "integer"]
         },
         "CTR": {
@@ -379,7 +379,7 @@
         "mashupShopNowClickClicks14d": {
             "type": ["null", "integer"]
         },
-        "atc_views14d": {
+        "atcViews14d": {
             "type": ["null", "integer"]
         },
         "mashupBackupImageClicks": {
@@ -910,91 +910,91 @@
         "dpv_clicks14d": {
             "type": ["null", "integer"]
         },
-        "video_complete": {
+        "videoComplete": {
             "type": ["null", "integer"]
         },
-        "survey_start_views14d": {
+        "surveyStartViews14d": {
             "type": ["null", "integer"]
         },
         "ecpvc": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
-        "video_first_quartile": {
+        "videoFirstQuartile": {
             "type": ["null", "integer"]
         },
-        "registration_confirm_page_clicks14d": {
+        "registrationConfirmPageClicks14d": {
             "type": ["null", "integer"]
         },
-        "product_purchased_cpa": {
+        "productPurchasedCPA": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "video_midpoint": {
+        "videoMidpoint": {
             "type": ["null", "integer"]
         },
         "atl14d": {
             "type": ["null", "integer"]
         },
-        "subscription_page14d": {
+        "subscriptionPage14d": {
             "type": ["null", "integer"]
         },
-        "game_load_cpa14d": {
+        "gameLoadCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "mashup_subscribe_and_save_click14d": {
+        "mashupSubscribeAndSaveClick14d": {
             "type": ["null", "integer"]
         },
-        "mashup_add_to_wishlist14d": {
+        "mashupAddToWishlist14d": {
             "type": ["null", "integer"]
         },
-        "game_interaction14d": {
+        "gameInteraction14d": {
             "type": ["null", "integer"]
         },
-        "e_cpm": {
+        "eCPM": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
-        "survey_finish_cpa14d": {
+        "surveyFinishCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
         "dpv14d": {
             "type": ["null", "integer"]
         },
-        "downloaded_video_plays_views14d": {
+        "downloadedVideoPlaysViews14d": {
             "type": ["null", "integer"]
         },
-        "message_sent_clicks14d": {
+        "messageSentClicks14d": {
             "type": ["null", "integer"]
         },
-        "homepage_visit_views14d": {
+        "homepageVisitViews14d": {
             "type": ["null", "integer"]
         },
-        "widget_interaction14d": {
+        "widgetInteraction14d": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement4_clicks": {
+        "brandStoreEngagement4Clicks": {
             "type": ["null", "integer"]
         },
-        "video_end_clicks": {
+        "videoEndClicks": {
             "type": ["null", "integer"]
         },
         "e_cpprpv14d": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
-        "game_interaction_views14d": {
+        "gameInteractionViews14d": {
             "type": ["null", "integer"]
         },
-        "subscription_button_clicks14d": {
+        "subscriptionButtonClicks14d": {
             "type": ["null", "integer"]
         },
-        "success_page_views14d": {
+        "successPageViews14d": {
             "type": ["null", "integer"]
         },
-        "success_page_clicks14d": {
+        "successPageClicks14d": {
             "type": ["null", "integer"]
         },
         "e_cp_atc14d": {
@@ -1004,188 +1004,188 @@
         "p_rp_vr14d": {
             "type": ["string", "null"]
         },
-        "homepage_visit_clicks14d": {
+        "homepageVisitClicks14d": {
             "type": ["null", "integer"]
         },
-        "total_pixel_cpa14d": {
+        "totalPixelCPA14d": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
-        "drop_down_selection_cvr14d": {
+        "dropDownSelectionCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "message_sent_cvr14d": {
+        "messageSentCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
         "impressions": {
             "type": ["null", "integer"]
         },
-        "registration_confirm_page_views14d": {
+        "registrationConfirmPageViews14d": {
             "type": ["null", "integer"]
         },
-        "added_to_shopping_cart14d": {
+        "addedToShoppingCart14d": {
             "type": ["null", "integer"]
         },
-        "atl_clicks14d": {
+        "atlClicks14d": {
             "type": ["null", "integer"]
         },
-        "atl_views14d": {
+        "atlViews14d": {
             "type": ["null", "integer"]
         },
-        "supply_cost": {
+        "supplyCost": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
-        "new_to_brand_purchases14d": {
+        "newToBrandPurchases14d": {
             "type": ["null", "integer"]
         },
-        "video_completed_views": {
+        "videoCompletedViews": {
             "type": ["null", "integer"]
         },
-        "registration_form_clicks14d": {
+        "registrationFormClicks14d": {
             "type": ["null", "integer"]
         },
-        "video_started_views": {
+        "videoStartedViews": {
             "type": ["null", "integer"]
         },
-        "play_trailers14d": {
+        "playTrailers14d": {
             "type": ["null", "integer"]
         },
-        "mashup_clip_coupon_click_cvr14d": {
+        "mashupClipCouponClickCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "marketing_landing_page_cpa14d": {
+        "marketingLandingPageCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "added_to_shopping_cart_cpa14d": {
+        "addedToShoppingCartCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "brand_store_engagement1_clicks": {
+        "brandStoreEngagement1Clicks": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement7": {
+        "brandStoreEngagement7": {
             "type": ["null", "integer"]
         },
-        "total_pixel_views14d": {
+        "totalPixelViews14d": {
             "type": ["null", "integer"]
         },
-        "subscription_button_views14d": {
+        "subscriptionButtonViews14d": {
             "type": ["null", "integer"]
         },
-        "purchase_button_views14d": {
+        "purchaseButtonViews14d": {
             "type": ["null", "integer"]
         },
-        "mobile_app_first_starts_cpa14d": {
+        "mobileAppFirstStartsCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "mashup_click_to_page_clicks": {
+        "mashupClickToPageClicks": {
             "type": ["null", "integer"]
         },
-        "mashup_click_to_page_cpa": {
+        "mashupClickToPageCPA": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "order_start_date": {
+        "orderStartDate": {
             "type": ["null", "string"],
             "format": "date-time"
         },
-        "add_to_watchlist_views14d": {
+        "addToWatchlistViews14d": {
             "type": ["null", "integer"]
         },
-        "widget_load_cpa14d": {
+        "widgetLoadCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "email_load14d": {
+        "emailLoad14d": {
             "type": ["null", "integer"]
         },
-        "mashup_subscribe_and_save_cvr14d": {
+        "mashupSubscribeAndSaveCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "subscription_page_views14d": {
+        "subscriptionPageViews14d": {
             "type": ["null", "integer"]
         },
-        "video_downloads14d": {
+        "videoDownloads14d": {
             "type": ["null", "integer"]
         },
-        "purchase_button_clicks14d": {
+        "purchaseButtonClicks14d": {
             "type": ["null", "integer"]
         },
-        "p_rpv14d": {
+        "pRPVC14d": {
             "type": ["null", "integer"]
         },
         "accept14d": {
             "type": ["null", "integer"]
         },
-        "mashup_add_to_cart_click_cvr14d": {
+        "mashupAddToCartClickCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "advertiser_id": {
+        "advertiserId": {
             "type": ["null", "integer"]
         },
-        "mashup_click_to_page": {
+        "mashupClickToPage": {
             "type": ["null", "integer"]
         },
-        "purchases_clicks14d": {
+        "purchasesClicks14d": {
             "type": ["null", "integer"]
         },
-        "player_trailers_clicks14d": {
+        "playerTrailersClicks14d": {
             "type": ["null", "integer"]
         },
-        "email_interaction14d": {
+        "emailInteraction14d": {
             "type": ["null", "integer"]
         },
-        "video_started_cpa": {
+        "videoStartedCPA": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "brand_store_engagement2_clicks": {
+        "brandStoreEngagement2Clicks": {
             "type": ["null", "integer"]
         },
-        "submit_button14d": {
+        "submitButton14d": {
             "type": ["null", "integer"]
         },
-        "mashup_add_to_wishlist_cpa14d": {
+        "mashupAddToWishlistCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "mashup_shop_now_click_views14d": {
+        "mashupShopNowClickViews14d": {
             "type": ["null", "integer"]
         },
-        "total_pixel_clicks14d": {
+        "totalPixelClicks14d": {
             "type": ["null", "integer"]
         },
-        "mobile_app_first_start_views14d": {
+        "mobileAppFirstStartViews14d": {
             "type": ["null", "integer"]
         },
-        "decline_clicks14d": {
+        "declineClicks14d": {
             "type": ["null", "integer"]
         },
-        "marketing_landing_page_views14d": {
+        "marketingLandingPageViews14d": {
             "type": ["null", "integer"]
         },
-        "purchase_rate14d": {
+        "purchaseRate14d": {
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "email_load_views14d": {
+        "emailLoadViews14d": {
             "type": ["null", "integer"]
         },
-        "mashup_add_to_cart_views14d": {
+        "mashupAddToCartViews14d": {
             "type": ["null", "integer"]
         },
-        "click_throughs": {
+        "clickThroughs": {
             "type": ["null", "integer"]
         },
-        "thank_you_page14d": {
+        "thankYouPage14d": {
             "type": ["null", "integer"]
         }
     }

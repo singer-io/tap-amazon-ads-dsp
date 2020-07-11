@@ -179,7 +179,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-    "total_ecpprpv14d": {
+    "totalECPPRPV14d": {
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
@@ -197,14 +197,14 @@
     "totalAddToListViews14d": {
       "type": ["null", "integer"]
     },
-    "3p_fee_cpm3_absorbed": {
+    "3pFeeCPM3Absorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
     "totalPurchasesClicks14d": {
       "type": ["null", "integer"]
     },
-    "3p_fee_automotive_absorbed": {
+    "3pFeeAutomotiveAbsorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },

@@ -9,7 +9,7 @@
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "subscription_page_clicks14d": {
+        "subscriptionPageClicks14d": {
             "type": ["null", "integer"]
         },
         "brandStoreEngagement4CVR": {
@@ -1001,7 +1001,7 @@
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "p_rp_vr14d": {
+        "pRPVr14d": {
             "type": ["string", "null"]
         },
         "homepageVisitClicks14d": {

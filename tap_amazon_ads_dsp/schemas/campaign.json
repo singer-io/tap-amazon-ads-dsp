@@ -224,7 +224,7 @@
       "type": ["null", "number"],
       "multipleOf": 0.0001
     },
-    "creative_id": {
+    "creativeId": {
       "type": ["null", "integer"]
     },
     "3p_fee_cpm2": {
@@ -235,14 +235,14 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "units_sold14d": {
+    "unitsSold14d": {
       "type": ["null", "integer"]
     },
-    "new_to_brand_product_sales14d": {
+    "newToBrandProductSales14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "new_to_brand_units_sold14d": {
+    "newToBrandUnitsSold14d": {
       "type": ["null", "integer"]
     },
     "totalSalesUSD14d": {

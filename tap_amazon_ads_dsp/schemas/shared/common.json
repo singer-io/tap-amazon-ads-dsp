@@ -2,38 +2,38 @@
     "additional_properties": false,
     "type": "object",
     "properties": {
-        "mashup_add_to_wishlist_clicks14d": {
+        "mashupAddToWishlistClicks14d": {
             "type": ["null", "integer"]
         },
-        "video_download_rate14d": {
+        "videoDownloadRate14d": {
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
         "subscription_page_clicks14d": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement4_cvr": {
+        "brandStoreEngagement4CVR": {
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "video_downloads_views14d": {
+        "videoDownloadsViews14d": {
             "type": ["null", "integer"]
         },
-        "mashup_click_to_page_cvr": {
+        "mashupClickToPageCVR": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
         "application14d": {
             "type": ["null", "integer"]
         },
-        "mashup_clip_coupon_click_cpa14d": {
+        "mashupClipCouponClickCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "video_downloads_clicks14d": {
+        "videoDownloadsClicks14d": {
             "type": ["null", "integer"]
         },
-        "video_streams_views14d": {
+        "videoStreamsViews14d": {
             "type": ["null", "integer"]
         },
         "pRPVViews14d": {
@@ -163,7 +163,7 @@
         "mashupClickToPageViews": {
             "type": ["null", "integer"]
         },
-        "e_cp_atl14d": {
+        "eCPAtl14d": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
@@ -230,7 +230,7 @@
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
-        "brand_store_engagement3_views": {
+        "brandStoreEngagement3Views": {
             "type": ["null", "integer"]
         },
         "thankYouPageCPA14d": {
@@ -300,7 +300,7 @@
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "game_interaction_clicks14d": {
+        "gameInteractionClicks14d": {
             "type": ["null", "integer"]
         },
         "totalPixel14d": {
@@ -388,10 +388,10 @@
         "surveyFinish14d": {
             "type": ["null", "integer"]
         },
-        "add_to_watchlist_clicks14d": {
+        "addToWatchlistClicks14d": {
             "type": ["null", "integer"]
         },
-        "brand_store_engagement6_cpa": {
+        "brandStoreEngagement6CPA": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },
@@ -875,23 +875,23 @@
         "bannerInteractionClicks14d": {
             "type": ["null", "integer"]
         },
-        "downloaded_video_plays14d": {
+        "downloadedVideoPlays14d": {
             "type": ["null", "integer"]
         },
-        "survey_finish_views14d": {
+        "surveyFinishViews14d": {
             "type": ["null", "integer"]
         },
-        "store_locator_page_views14d": {
+        "storeLocatorPageViews14d": {
             "type": ["null", "integer"]
         },
-        "purchases_views14d": {
+        "purchasesViews14d": {
             "type": ["null", "integer"]
         },
-        "registration_confirm_page_cpa14d": {
+        "registrationConfirmPageCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
 		},
-        "added_to_shopping_cart_clicks14d": {
+        "addedToShoppingCartClicks14d": {
             "type": ["null", "integer"]
         },
         "brandStoreEngagement5Clicks": {
@@ -907,7 +907,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "dpv_clicks14d": {
+        "dpvClicks14d": {
             "type": ["null", "integer"]
         },
         "videoComplete": {
@@ -981,7 +981,7 @@
         "videoEndClicks": {
             "type": ["null", "integer"]
         },
-        "e_cpprpv14d": {
+        "eCPPRPV14d": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
         },
@@ -997,7 +997,7 @@
         "successPageClicks14d": {
             "type": ["null", "integer"]
         },
-        "e_cp_atc14d": {
+        "eCPAtc14d": {
             "type": ["null", "number"],
             "multipleOf": 0.00001
         },

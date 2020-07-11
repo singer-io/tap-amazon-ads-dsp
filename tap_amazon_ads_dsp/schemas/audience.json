@@ -3,33 +3,33 @@
   "type": "object",
   "properties": {
     "$ref": "common.json",
-    "line_item_type": {
+    "lineItemType": {
       "type": ["null", "string"]
     },
-    "segment_class_code": {
+    "segmentClassCode": {
       "type": ["null", "string"]
     },
-    "targeting_method": {
+    "targetingMethod": {
       "type": ["null", "string"]
     },
-    "segment_marketplace_id": {
+    "segmentMarketplaceId": {
       "type": ["null", "integer"]
     },
-    "interval_start": {
+    "intervalStart": {
       "type": ["null", "string"],
       "format": "date-time"
     },
-    "interval_end": {
+    "intervalEnd": {
       "type": ["null", "string"],
       "format": "date-time"
     },
-    "segment_type": {
+    "segmentType": {
       "type": ["null", "string"]
     },
     "segment": {
       "type": ["null", "string"]
     },
-    "segment_source": {
+    "segmentSource": {
       "type": ["null", "string"]
     }
   }

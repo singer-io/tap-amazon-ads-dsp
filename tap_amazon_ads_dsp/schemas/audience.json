@@ -16,10 +16,12 @@
       "type": ["null", "integer"]
     },
     "interval_start": {
-      "type": ["null", "integer"]
+      "type": ["null", "string"],
+      "format": "date-time"
     },
     "interval_end": {
-      "type": ["null", "integer"]
+      "type": ["null", "string"],
+      "format": "date-time"
     },
     "segment_type": {
       "type": ["null", "string"]

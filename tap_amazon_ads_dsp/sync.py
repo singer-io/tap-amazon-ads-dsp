@@ -343,7 +343,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             with metrics.record_counter(report_name) as counter:
                 for records in stream_csv(location):
                     if records:
-                        transformed_records = transform_report(
+                        transformed_records = transform_report(schema,
                             report_name, report_type, report_dttm,
                             report_dimensions, records)
                         # Transform record with Singer Transformer
@@ -362,7 +362,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
                                              singer_transform_record,
                                              time_extracted=time_extracted)
                                 counter.increment()
-                        write_bookmark(state, report_name, entity, max_bookmark_value.strftime('%Y%m%d'))
+                write_bookmark(state, report_name, entity, max_bookmark_value.strftime('%Y%m%d'))
                 # Increment total_records
                 total_records = total_records + counter.value
             # End: for async_results_url in async_results_urls
@@ -395,16 +395,13 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
 
 def stream_csv(url):
     with requests.get(url, stream=True) as data:
+        # reader = csv.DictReader(codecs.iterdecode(data.iter_lines(), 'utf-8'))
         reader = csv.DictReader(codecs.iterdecode(data.iter_lines(), 'utf-8'))
-        count = 0
-        # for record in reader:
-        #     yield record
         batch = []
         for record in reader:
-            while count < 1000:
-                batch.append(record)
-                count = count + 1
-            yield batch
+            batch.append(record)
+        LOGGER.info(f"Streaming batch of {len(batch)} for processing")
+        yield batch
 
     #      lines = (line.decode('utf-8') for line in data.iter_lines())
     # for row in csv.reader(lines):

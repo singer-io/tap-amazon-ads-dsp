@@ -246,10 +246,15 @@ report_dimension_metrics = {
     }
 }
 
-dimension_fields = ["lineItemBudget", "orderId", "lineItemExternalId", "orderStartDate", "orderBudget", 
-"lineItemStartDate", "date", "siteName", "orderExternalId", "orderEndDate", "supplySourceName", 
-"lineItemName", "lineItemId", "report_date", "orderName", "orderCurrency", "advertiserName", 
-"__sdc_record_hash", "advertiserId", "lineItemEndDate", "entityId"]
+dimension_fields = [
+    "lineItemBudget", "orderId", "lineItemExternalId", "orderStartDate",
+    "orderBudget", "lineItemStartDate", "date", "siteName", "orderExternalId",
+    "orderEndDate", "supplySourceName", "lineItemName", "lineItemId",
+    "report_date", "orderName", "orderCurrency", "advertiserName",
+    "__sdc_record_hash", "advertiserId", "lineItemEndDate", "entityId",
+    "reportDate", "segment", "intervalEnd", "lineItemType", "intervalStart",
+    "segmentMarketplaceId", "creativeSize", "creativeID", "creativeName", "creativeType"
+]
 
 dimension_primary_keys = {
     "ORDER": [
@@ -314,7 +319,7 @@ def fields_for_report_dimensions(report_type, report_dimensions):
 
     if report_type == 'audience':
         report_primary_keys.append('lineitemtype')
-        
+
     report_primary_keys.sort()
     return report_primary_keys
 

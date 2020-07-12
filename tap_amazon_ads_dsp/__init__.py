@@ -3,7 +3,6 @@
 __author__ = 'Scott Coleman'
 __email__ = 'scott.coleman@bytecode.io'
 
-from memory_profiler import profile
 import argparse
 import json
 import sys
@@ -30,7 +29,6 @@ def do_discover(reports):
 
 
 @singer.utils.handle_top_exception(LOGGER)
-@profile
 def main():
 
     parsed_args = singer.utils.parse_args(REQUIRED_CONFIG_KEYS)

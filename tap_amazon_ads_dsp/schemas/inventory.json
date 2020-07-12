@@ -161,7 +161,7 @@
     "totalAddToCartClicks14d": {
       "type": ["null", "integer"]
     },
-    "roas14d": {
+    "ROAS14d": {
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
@@ -212,7 +212,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "totalPRPVR14d": {
+    "totalPRPVr14d": {
       "type": ["number", "null"],
       "multipleOf": 0.0001
     },

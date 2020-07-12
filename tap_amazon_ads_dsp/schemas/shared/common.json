@@ -426,7 +426,7 @@
         "acceptViews14d": {
             "type": ["null", "integer"]
         },
-        "storeSocatorPageClicks14d": {
+        "storeLocatorPageClicks14d": {
             "type": ["null", "integer"]
         },
         "widgetLoadClicks14d": {
@@ -517,8 +517,9 @@
             "type": ["number", "null"],
             "multipleOf": 0.0001
         },
-        "eCPR14d": {
-            "type": ["null", "string"]
+        "ecpr14d": {
+            "type": ["null", "number"],
+            "multipleOf": 0.0001
         },
         "brandStoreEngagement4": {
             "type": ["null", "integer"]
@@ -651,7 +652,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-        "linItemName": {
+        "lineItemName": {
             "type": ["null", "string"]
         },
         "playTrailersViews14d": {
@@ -719,10 +720,12 @@
         "mobileAppFirstStartCVR14d": {
             "type": ["null", "number"],
             "multipleOf": 0.0001
-},      "mashupAddToQishlistCVR14d": {
+        },      
+        "mashupAddToWishlistCVR14d": {
 		    "type": ["null", "number"],
 		    "multipleOf": 0.0001
-},      "videoThirdQuartile": {
+        },      
+        "videoThirdQuartile": {
             "type": ["null", "integer"]
         },
         "rentalsClicks14d": {
@@ -763,7 +766,7 @@
         "brandStoreEngagement6": {
             "type": ["null", "integer"]
         },
-        "clickOnRedirecCvr14d": {
+        "clickOnRedirectCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
@@ -841,7 +844,6 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
-
         "videoStreamsRate14d": {
             "type": ["number", "null"],
             "multipleOf": 0.0001
@@ -882,6 +884,9 @@
             "type": ["null", "integer"]
         },
         "storeLocatorPageViews14d": {
+            "type": ["null", "integer"]
+        },
+        "storeLocatorPageClicks14d": {
             "type": ["null", "integer"]
         },
         "purchasesViews14d": {
@@ -984,6 +989,10 @@
         "eCPPRPV14d": {
             "type": ["null", "number"],
             "multipleOf": 0.000001
+        },
+        "pRPV14d": {
+            "type": ["null", "number"],
+            "multipleOf": 0.0001
         },
         "gameInteractionViews14d": {
             "type": ["null", "integer"]
@@ -1118,9 +1127,6 @@
         "purchaseButtonClicks14d": {
             "type": ["null", "integer"]
         },
-        "pRPVC14d": {
-            "type": ["null", "integer"]
-        },
         "accept14d": {
             "type": ["null", "integer"]
         },
@@ -1156,7 +1162,11 @@
         "mashupAddToWishlistCPA14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.00001
-		},
+        },
+        "mashupAddToWishlistCVR14d": {
+            "type": ["null", "number"],
+			"multipleOf": 0.00001
+        },
         "mashupShopNowClickViews14d": {
             "type": ["null", "integer"]
         },

@@ -134,7 +134,7 @@
     "totalPurchasesViews14d": {
       "type": ["null", "integer"]
     },
-    "newToBrandProducSalesGBP14d": {
+    "newToBrandProductSalesGBP14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -175,7 +175,7 @@
     "totalPRPVClicks14d": {
       "type": ["null", "integer"]
     },
-    "totalSubscribeAndSaveSubscriptioCVR14d": {
+    "totalSubscribeAndSaveSubscriptionCVR14d": {
 			"type": ["null", "number"],
 			"multipleOf": 0.0001
 		},
@@ -208,7 +208,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "totalPRPVR14d": {
+    "totalPRPVr14d": {
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
@@ -224,7 +224,7 @@
       "type": ["null", "number"],
       "multipleOf": 0.0001
     },
-    "creativeId": {
+    "creativeID": {
       "type": ["null", "integer"]
     },
     "3pFeeCPM2": {

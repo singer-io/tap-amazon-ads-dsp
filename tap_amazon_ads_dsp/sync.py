@@ -266,19 +266,20 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
         # Dimensions for API request
         api_dimensions = report_config.get('dimensions', report_dimension_metrics.get(report_type).get('dimensions'))
 
+        # Add selected metrics for API request
+        # if not tap_config.get('all_metrics'):
+        selected_metrics = ""
+        for selected in selected_fields:
+            if selected not in dimension_fields:
+                selected_metrics = selected if not selected_metrics else selected_metrics + ',' + selected
+
         report_config = {
             'reportDate': window_start_str,
             'format': 'CSV',
             'type': report_type.upper(),
-            'dimensions': api_dimensions
+            'dimensions': api_dimensions,
+            'metrics': selected_metrics
         }
-
-        # Add selected metrics for API request
-        if not tap_config.get('all_metrics'):
-            selected_metrics = ""
-            for selected in selected_fields:
-                if selected not in dimension_fields:
-                    selected_metrics = selected if not selected_metrics else selected_metrics + ',' + selected
 
         if advertiser_ids:
             report_config['advertiserIds'] = advertiser_ids
@@ -343,12 +344,12 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             with metrics.record_counter(report_name) as counter:
                 for records in stream_csv(location):
                     if records:
-                        transformed_records = transform_report(schema,
+                        transform_report(schema,
                             report_name, report_type, report_dttm,
                             report_dimensions, records)
                         # Transform record with Singer Transformer
                         with Transformer() as transformer:
-                            for record in transformed_records:
+                            for record in records:
 
                                 # Evalueate max_bookmark_value
                                 if report_dttm > max_bookmark_value: # Datetime comparison
@@ -362,11 +363,11 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
                                              singer_transform_record,
                                              time_extracted=time_extracted)
                                 counter.increment()
+                    else:
+                        break
                 write_bookmark(state, report_name, entity, max_bookmark_value.strftime('%Y%m%d'))
                 # Increment total_records
                 total_records = total_records + counter.value
-            # End: for async_results_url in async_results_urls
-
             queued_job_ids.remove(job_id)
         else:
             # Exponential to limit of 256 seconds
@@ -381,31 +382,18 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     return total_records
     # End sync_report
 
-
-# def stream_curl(url):  
-#     process = subprocess.Popen(['/usr/bin/curl', '-s', url], stdout=subprocess.PIPE)
-
-#     while True:
-#         line = process.stdout.readline()
-
-#         if not line:
-#             break
-#         else:
-#             yield json.loads(line)
-
-def stream_csv(url):
+def stream_csv(url, batch_size=1024):
     with requests.get(url, stream=True) as data:
-        # reader = csv.DictReader(codecs.iterdecode(data.iter_lines(), 'utf-8'))
-        reader = csv.DictReader(codecs.iterdecode(data.iter_lines(), 'utf-8'))
+        reader = csv.DictReader(codecs.iterdecode(data.iter_lines(chunk_size=1024), 'utf-8'))
         batch = []
+
         for record in reader:
             batch.append(record)
-        LOGGER.info(f"Streaming batch of {len(batch)} for processing")
-        yield batch
-
-    #      lines = (line.decode('utf-8') for line in data.iter_lines())
-    # for row in csv.reader(lines):
-    #     yield(row)
+            if len(batch) == batch_size:
+                yield batch
+                batch = []
+        if batch:
+            yield batch
 
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):

@@ -65,16 +65,16 @@ def transform_record(report_name, report_type, report_date, report_dimensions, r
 # Transform for report_data in sync_report
 def transform_report(schema, report_name, report_type, report_date, report_dimensions, report_data):
     report_primary_keys = fields_for_report_dimensions(report_type, report_dimensions)
-    camel_keys = []
-    for key in report_primary_keys:
-        camel_keys.append(convert(key))
+    # camel_keys = []
+    # for key in report_primary_keys:
+    #     camel_keys.append(convert(key))
     # transformed_records = []
 
     # Camel to Snake case
-    transformed_report = convert_json(report_data)
+    # transformed_report = convert_json(report_data)
 
-    for record in transformed_report:
-        primary_keys = primary_keys_for_record(camel_keys, record)
+    for record in report_data:
+        primary_keys = primary_keys_for_record(report_primary_keys, record)
         dims_md5 = str(hash_data(json.dumps(primary_keys, sort_keys=True)))
         record['__sdc_record_hash'] = dims_md5
         record['report_date'] = report_date.strftime('%Y-%m-%dT%H:%M:%S%z')

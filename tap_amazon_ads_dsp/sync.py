@@ -7,8 +7,8 @@ import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
 from tap_amazon_ads_dsp.schema import (
-    dimension_fields,
-    report_dimension_metrics,
+    DIMENSION_FIELDS,
+    REPORT_DIMENSION_METRICS,
 )
 from tap_amazon_ads_dsp.transform import transform_report
 from tap_amazon_ads_dsp.client import stream_csv
@@ -169,7 +169,8 @@ def get_absolute_start_end_time(last_dttm, attribution_window):
     elif delta_days > 89:
         start = now_dttm - timedelta(88)
         LOGGER.info(
-            f"Start date with attribution window exceeds max API history. Setting start date to {start}"
+            (f'Start date with attribution window exceeds max API history.'
+             f'Setting start date to {start}')
         )
     else:
         start = last_dttm
@@ -209,7 +210,7 @@ def to_epoch(dttm):
     epoch_time = strptime_to_utc("19700101")
     return int((dttm - epoch_time).total_seconds())
 
-
+# pylint: disable=too-many-statements
 def sync_report(client,
                 catalog,
                 state,
@@ -259,13 +260,13 @@ def sync_report(client,
         # Dimensions for API request
         api_dimensions = report_config.get(
             "dimensions",
-            report_dimension_metrics.get(report_type).get("dimensions"))
+            REPORT_DIMENSION_METRICS.get(report_type).get("dimensions"))
 
         # Add selected metrics for API request
         # if not tap_config.get('all_metrics'):
         selected_metrics = ""
         for selected in selected_fields:
-            if selected not in dimension_fields:
+            if selected not in DIMENSION_FIELDS:
                 selected_metrics = (selected if not selected_metrics else
                                     selected_metrics + "," + selected)
 
@@ -346,7 +347,6 @@ def sync_report(client,
                     if records:
                         transform_report(
                             schema,
-                            report_name,
                             report_type,
                             report_dttm,
                             report_dimensions,

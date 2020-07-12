@@ -1,17 +1,16 @@
 import json
 import os
 
+from functools import reduce
 import singer
 from singer import metadata
-from functools import reduce
 
 LOGGER = singer.get_logger()
 
-report_dimension_metrics = {
+REPORT_DIMENSION_METRICS = {
     "common": {
-        "default_dimension_fields": [
-            "entityId", "advertiserName", "advertiserId", "report_date"
-        ],
+        "default_dimension_fields":
+        ["entityId", "advertiserName", "advertiserId", "report_date"],
         "fields": [
             "totalCost", "supplyCost", "amazonAudienceFee",
             "advertiserTimezone", "advertiserCountry", "amazonPlatformFee",
@@ -234,47 +233,37 @@ report_dimension_metrics = {
         ]
     },
     "audience": {
-        "default_dimension_fields": ["intervalStart", "intervalEnd", "segment"],
+        "default_dimension_fields":
+        ["intervalStart", "intervalEnd", "segment"],
         "dimensions": ["ORDER", "LINE_ITEM"],
         "fields": [
-            "segmentClassCode",
-            "segmentSource",
-            "segmentType",
-            "segmentMarketplaceID",
-            "targetingMethod"
+            "segmentClassCode", "segmentSource", "segmentType",
+            "segmentMarketplaceID", "targetingMethod"
         ]
     }
 }
 
-dimension_fields = [
+DIMENSION_FIELDS = [
     "lineItemBudget", "orderId", "lineItemExternalId", "orderStartDate",
     "orderBudget", "lineItemStartDate", "date", "siteName", "orderExternalId",
     "orderEndDate", "supplySourceName", "lineItemName", "lineItemId",
     "report_date", "orderName", "orderCurrency", "advertiserName",
     "__sdc_record_hash", "advertiserId", "lineItemEndDate", "entityId",
     "reportDate", "segment", "intervalEnd", "lineItemType", "intervalStart",
-    "segmentMarketplaceId", "creativeSize", "creativeID", "creativeName", "creativeType"
+    "segmentMarketplaceId", "creativeSize", "creativeID", "creativeName",
+    "creativeType"
 ]
 
-dimension_primary_keys = {
+DIMENSION_PRIMARY_KEYS = {
     "ORDER": [
         "orderName", "orderId", "orderStartDate", "orderEndDate",
         "orderBudget", "orderExternalId", "orderCurrency"
     ],
     "LINE_ITEM": [
-        "lineItemName",
-        "lineItemId",
-        "lineItemStartDate",
-        "lineItemEndDate",
-        "lineItemBudget",
-        "lineItemExternalId"
+        "lineItemName", "lineItemId", "lineItemStartDate", "lineItemEndDate",
+        "lineItemBudget", "lineItemExternalId"
     ],
-    "CREATIVE": [
-        "creativeName",
-        "creativeID",
-        "creativeType",
-        "creativeSize"
-    ],
+    "CREATIVE": ["creativeName", "creativeID", "creativeType", "creativeSize"],
     "SITE": ["siteName"],
     "SUPPLY": ["supplySourceName"]
 }
@@ -290,8 +279,10 @@ def get_abs_path(path):
 def load_shared_schema_refs():
     shared_schemas_path = get_abs_path('schemas/shared')
 
-    shared_file_names = [f for f in os.listdir(shared_schemas_path)
-                         if os.path.isfile(os.path.join(shared_schemas_path, f))]
+    shared_file_names = [
+        f for f in os.listdir(shared_schemas_path)
+        if os.path.isfile(os.path.join(shared_schemas_path, f))
+    ]
 
     shared_schema_refs = {}
     for shared_file in shared_file_names:
@@ -299,6 +290,7 @@ def load_shared_schema_refs():
             shared_schema_refs[shared_file] = json.load(data_file)
 
     return shared_schema_refs
+
 
 def resolve_schema_references(schema, refs):
     if '$ref' in schema['properties']:
@@ -310,11 +302,13 @@ def resolve_schema_references(schema, refs):
 def fields_for_report_dimensions(report_type, report_dimensions):
     report_primary_keys = []
     # All reports contains default
-    for field in report_dimension_metrics['common']['default_dimension_fields']:
+    for field in REPORT_DIMENSION_METRICS['common'][
+            'default_dimension_fields']:
         report_primary_keys.append(field)
     for dimension in report_dimensions:
-        report_primary_keys.extend(dimension_primary_keys.get(dimension))
-    for field in report_dimension_metrics[report_type]['default_dimension_fields']:
+        report_primary_keys.extend(DIMENSION_PRIMARY_KEYS.get(dimension))
+    for field in REPORT_DIMENSION_METRICS[report_type][
+            'default_dimension_fields']:
         report_primary_keys.append(field)
 
     if report_type == 'audience':
@@ -334,7 +328,8 @@ def get_schemas(reports):
     for report in reports:
         report_name = report.get('name')
         report_type = report.get('type')
-        report_dimensions = report_dimension_metrics.get(report_type).get('dimensions')
+        report_dimensions = REPORT_DIMENSION_METRICS.get(report_type).get(
+            'dimensions')
 
         report_path = get_abs_path(f'schemas/{report_type.lower()}.json')
 
@@ -351,9 +346,11 @@ def get_schemas(reports):
             valid_replication_keys=['report_date'],
             replication_method='INCREMENTAL')
         mdata = metadata.to_map(mdata)
-        mdata = reduce(lambda mdata, field_name: metadata.write(mdata, ("properties", field_name), "inclusion", "automatic"),
-                   fields_for_report_dimensions(report_type, report_dimensions),
-                   mdata)
+        mdata = reduce(
+            lambda mdata, field_name: metadata.write(mdata, (
+                "properties", field_name), "inclusion", "automatic"),
+            fields_for_report_dimensions(report_type, report_dimensions),
+            mdata)
 
         field_metadata[report_name] = mdata
 

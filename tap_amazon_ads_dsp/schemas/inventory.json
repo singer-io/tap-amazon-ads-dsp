@@ -86,7 +86,7 @@
     },
     "totalFee": {
       "type": ["null", "number"],
-      "multipleOf": .000001
+      "multipleOf": 0.000001
     },
     "3pFeeDoubleclickCampaignManager": {
 			"type": ["null", "number"],

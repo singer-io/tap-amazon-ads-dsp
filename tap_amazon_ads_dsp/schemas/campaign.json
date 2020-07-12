@@ -208,7 +208,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "total_prp_vr14d": {
+    "totalPRPVR14d": {
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
@@ -227,11 +227,11 @@
     "creativeId": {
       "type": ["null", "integer"]
     },
-    "3p_fee_cpm2": {
+    "3pFeeCPM2": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "3p_fee_cpm1": {
+    "3pFeeCPM1": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
@@ -249,7 +249,7 @@
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },
-    "3_p_fees": {
+    "3PFees": {
       "type": ["null", "number"],
       "multipleOf": 0.000001
     },
@@ -310,7 +310,7 @@
       "type": ["null", "string"],
       "format": "date-time"
     },
-    "total_prpv_views14d": {
+    "totalPRPVViews14d": {
       "type": ["null", "integer"]
     },
     "totalAddToCartClicks14d": {
@@ -336,7 +336,7 @@
     "totalSubscribeAndSaveSubscriptionViews14d": {
       "type": ["null", "integer"]
     },
-    "3p_fee_double_verify_absorbed": {
+    "3pFeeDoubleVerifyAbsorbed": {
 			"type": ["null", "number"],
 			"multipleOf": 0.000001
     },

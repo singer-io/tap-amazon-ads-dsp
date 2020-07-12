@@ -3,9 +3,6 @@
   "type": "object",
   "properties": {
     "$ref": "common.json",
-    "advertiserId": {
-      "type": ["null", "integer"]
-    },
     "3pFeeDoubleVerify": {
       "type": ["null", "number"],
       "multipleOf": 0.000001

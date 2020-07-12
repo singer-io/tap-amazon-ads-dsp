@@ -1,14 +1,12 @@
-import json
+import codecs
+import csv
 import threading
-import zlib
 
 import backoff
 import requests
 import requests_oauthlib
 import singer
 import singer.metrics
-import time
-import csv
 
 LOGGER = singer.get_logger()  # noqa
 
@@ -35,6 +33,7 @@ class AmazonAdvertisingClient:
         self.config = config
         self.login_timer = None
         self.session = requests.Session()
+        self.access_token = None
 
     def login(self):
         LOGGER.info(f"Refreshing token")
@@ -58,19 +57,19 @@ class AmazonAdvertisingClient:
 
         self.access_token = tokens['access_token']
 
-    @backoff.on_exception(backoff.expo,
-                        (Server5xxError, ConnectionError, Server42xRateLimitError),
-                        max_tries=5,
-                        factor=2)
-    def _make_request(self,
-                      url=None,
-                      method=None,
-                      entity=None,
-                      job=None,
-                      params=None,
-                      body=None,
-                      attempts=0,
-                      stream=False):
+    @backoff.on_exception(
+        backoff.expo,
+        (Server5xxError, ConnectionError, Server42xRateLimitError),
+        max_tries=5,
+        factor=2)
+    def make_request(self,
+                     url=None,
+                     method=None,
+                     entity=None,
+                     job=None,
+                     params=None,
+                     body=None,
+                     stream=False):
         if job:
             url = ADS_URL + '/' + job
         else:
@@ -124,26 +123,20 @@ class AmazonAdvertisingClient:
 
         return response
 
-    def make_request(self, url, method, params, body):
-        return self._make_request(url=url,
-                                  method=method,
-                                  params=params,
-                                  body=body).json()
 
-    def stream_report(self, url):
-        LOGGER.info("Making {} request ({})".format('GET', url))
-        with requests.get(url, stream=True) as response:
-            for line in response.iter_lines():
-                if line:
-                    yield line
-
-
-@backoff.on_exception(backoff.expo,
-                        (Server5xxError, ConnectionError, Server42xRateLimitError),
-                        max_tries=5,
-                        factor=2)
-def stream_csv(url):
+@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError),
+                      max_tries=5,
+                      factor=2)
+def stream_csv(url, batch_size=1024):
     with requests.get(url, stream=True) as data:
-        reader = csv.DictReader(data.iter_lines())
+        reader = csv.DictReader(
+            codecs.iterdecode(data.iter_lines(chunk_size=1024), "utf-8"))
+        batch = []
+
         for record in reader:
-            yield record
+            batch.append(record)
+            if len(batch) == batch_size:
+                yield batch
+                batch = []
+        if batch:
+            yield batch

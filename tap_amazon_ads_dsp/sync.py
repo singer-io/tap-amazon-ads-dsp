@@ -1,19 +1,13 @@
-import codecs
-import csv
 import json
-import random
-import subprocess
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 from urllib.parse import urlparse
 
-import requests
 import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
 from tap_amazon_ads_dsp.schema import (
     dimension_fields,
-    dimension_primary_keys,
     report_dimension_metrics,
 )
 from tap_amazon_ads_dsp.transform import transform_report
@@ -89,11 +83,11 @@ def obj_to_dict(obj):
     return result
 
 
-def get_resource(stream_name, client, entity, job_id, params=None):
+def get_resource(stream_name, client, entity, job_id,):
     try:
         response = client.make_request(method="GET",
-                                        entity=entity,
-                                        job=job_id)
+                                       entity=entity,
+                                       job=job_id)
     except Exception as err:
         LOGGER.error("Stream: {} - ERROR: {}".format(stream_name, err))
         raise err
@@ -104,23 +98,13 @@ def get_resource(stream_name, client, entity, job_id, params=None):
 def post_resource(client, report_name, entity, body=None):
     try:
         response = client.make_request(method="POST",
-                                        entity=entity,
-                                        body=body)
+                                       entity=entity,
+                                       body=body)
     except Exception as err:
         LOGGER.error("Report: {} - ERROR: {}".format(report_name, err))
         raise err
     response_body = response.json()
     return response_body
-
-
-def get_async_data(client, stream, entity, location):
-    try:
-        LOGGER.info(f"Downloading report for entity {entity} from {location}")
-        return client.stream_report(location)
-
-    except Exception as err:
-        LOGGER.error("Report: {} {} - ERROR: {}".format(stream, entity, err))
-        raise err
 
 
 # List selected fields from stream catalog
@@ -196,8 +180,7 @@ def get_absolute_start_end_time(last_dttm, attribution_window):
 
 # POST QUEUED ASYNC JOB
 # pylint: disable=line-too-long
-def post_queued_async_jobs(client, entity, report_name, window_start,
-                           report_config):
+def post_queued_async_jobs(client, entity, report_name, report_config):
     LOGGER.info(
         "Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job".
         format(report_name, entity, report_config["type"]))
@@ -219,8 +202,7 @@ def report_is_ready(stream, client, entity, job_id):
             LOGGER.info(f"Found bad location URI {uri}")
             raise Exception
         return True, uri.geturl()
-    else:
-        return False, None
+    return False, None
 
 
 def to_epoch(dttm):
@@ -302,8 +284,7 @@ def sync_report(client,
             client,
             entity,
             report_name,
-            window_start=window_start_str,
-            report_config=report_config,
+            report_config,
         )
 
         queued_reports[job_result.get("reportId")] = {
@@ -376,7 +357,7 @@ def sync_report(client,
                             for record in records:
 
                                 # Evalueate max_bookmark_value
-                                if (report_dttm > max_bookmark_value):  # Datetime comparison
+                                if report_dttm > max_bookmark_value:  # Datetime comparison
                                     max_bookmark_value = report_dttm
 
                                 singer_transform_record = transformer.transform(

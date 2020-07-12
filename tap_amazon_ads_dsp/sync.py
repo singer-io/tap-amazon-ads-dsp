@@ -1,19 +1,23 @@
-# pylint: disable=too-many-lines
+import codecs
+import csv
 import json
 import random
+import subprocess
 import time
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
+import requests
 import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
+from tap_amazon_ads_dsp.schema import (
+    dimension_fields,
+    dimension_primary_keys,
+    report_dimension_metrics,
+)
 from tap_amazon_ads_dsp.transform import transform_report
-from tap_amazon_ads_dsp.schema import (dimension_primary_keys, report_dimension_metrics, dimension_fields)
-import subprocess
-import requests
-import csv
-import codecs
+from tap_amazon_ads_dsp.client import stream_csv
 
 LOGGER = singer.get_logger()
 DEFAULT_ATTRIBUTION_WINDOW = 14
@@ -23,12 +27,12 @@ DATE_WINDOW_SIZE = 1
 def write_schema(catalog, stream_name):
     stream = catalog.get_stream(stream_name)
     schema = stream.schema.to_dict()
-    LOGGER.info('Stream: {} - Writing schema'.format(stream_name))
+    LOGGER.info("Stream: {} - Writing schema".format(stream_name))
     try:
         singer.write_schema(stream_name, schema, stream.key_properties)
     except OSError as err:
         LOGGER.error(
-            'Stream: {} - OS Error writing schema'.format(stream_name))
+            "Stream: {} - OS Error writing schema".format(stream_name))
         raise err
 
 
@@ -39,31 +43,30 @@ def write_record(stream_name, record, time_extracted):
                                      time_extracted=time_extracted)
     except OSError as err:
         LOGGER.error(
-            'Stream: {} - OS Error writing record'.format(stream_name))
-        LOGGER.error('record: {}'.format(record))
+            "Stream: {} - OS Error writing record".format(stream_name))
+        LOGGER.error("record: {}".format(record))
         raise err
 
 
 def get_bookmark(state, stream, entity, default):
     # default only populated on initial sync
-    if (state is None) or ('bookmarks' not in state) or (
-            stream
-            not in state['bookmarks']) or (entity
-                                           not in state['bookmarks'][stream]):
+    if ((state is None) or ("bookmarks" not in state)
+            or (stream not in state["bookmarks"])
+            or (entity not in state["bookmarks"][stream])):
         return default
-    return state.get('bookmarks', {}).get(stream).get(entity, default)
+    return state.get("bookmarks", {}).get(stream).get(entity, default)
 
 
 def write_bookmark(state, stream, entity, value):
-    if 'bookmarks' not in state:
-        state['bookmarks'] = {}
-    if stream not in state['bookmarks']:
-        state['bookmarks'][stream] = {}
-    if entity not in state['bookmarks'][stream]:
-        state['bookmarks'][stream][entity] = {}
-    state['bookmarks'][stream][entity] = value
+    if "bookmarks" not in state:
+        state["bookmarks"] = {}
+    if stream not in state["bookmarks"]:
+        state["bookmarks"][stream] = {}
+    if entity not in state["bookmarks"][stream]:
+        state["bookmarks"][stream][entity] = {}
+    state["bookmarks"][stream][entity] = value
     LOGGER.info(
-        'Stream: {}, Entity {} - Write state, bookmark value: {}'.format(
+        "Stream: {}, Entity {} - Write state, bookmark value: {}".format(
             stream, entity, value))
     singer.write_state(state)
 
@@ -88,13 +91,11 @@ def obj_to_dict(obj):
 
 def get_resource(stream_name, client, entity, job_id, params=None):
     try:
-        # request = Request(client, 'get', resource, params=params) #, stream=True)
-        # job_status = get_resource(stream, client, entity, job_id, path, params)
-        response = client._make_request(method='GET',
+        response = client.make_request(method="GET",
                                         entity=entity,
                                         job=job_id)
     except Exception as err:
-        LOGGER.error('Stream: {} - ERROR: {}'.format(stream_name, err))
+        LOGGER.error("Stream: {} - ERROR: {}".format(stream_name, err))
         raise err
     response_body = response.json()
     return response_body
@@ -102,11 +103,11 @@ def get_resource(stream_name, client, entity, job_id, params=None):
 
 def post_resource(client, report_name, entity, body=None):
     try:
-        response = client._make_request(method='POST',
+        response = client.make_request(method="POST",
                                         entity=entity,
                                         body=body)
     except Exception as err:
-        LOGGER.error('Report: {} - ERROR: {}'.format(report_name, err))
+        LOGGER.error("Report: {} - ERROR: {}".format(report_name, err))
         raise err
     response_body = response.json()
     return response_body
@@ -114,11 +115,11 @@ def post_resource(client, report_name, entity, body=None):
 
 def get_async_data(client, stream, entity, location):
     try:
-        LOGGER.info(f'Downloading report for entity {entity} from {location}')
+        LOGGER.info(f"Downloading report for entity {entity} from {location}")
         return client.stream_report(location)
 
     except Exception as err:
-        LOGGER.error('Report: {} {} - ERROR: {}'.format(stream, entity, err))
+        LOGGER.error("Report: {} {} - ERROR: {}".format(stream, entity, err))
         raise err
 
 
@@ -131,8 +132,8 @@ def get_selected_fields(catalog, stream_name):
     for entry in mdata_list:
         field = None
         try:
-            field = entry['breadcrumb'][1]
-            if entry.get('metadata', {}).get('selected', False):
+            field = entry["breadcrumb"][1]
+            if entry.get("metadata", {}).get("selected", False):
                 selected_fields.append(field)
         except IndexError:
             pass
@@ -153,15 +154,15 @@ def remove_hours_local(dttm):
 
 # Currently syncing sets the stream currently being delivered in the state.
 # If the integration is interrupted, this state property is used to identify
-#  the starting point to continue from.
+# the starting point to continue from.
 # Reference: https://github.com/singer-io/singer-python/blob/master/singer/bookmarks.py#L41-L46
 def update_currently_syncing(state, stream_name):
-    if (stream_name is None) and ('currently_syncing' in state):
-        del state['currently_syncing']
+    if (stream_name is None) and ("currently_syncing" in state):
+        del state["currently_syncing"]
     else:
         singer.set_currently_syncing(state, stream_name)
     singer.write_state(state)
-    LOGGER.info('Stream: {} - Currently Syncing'.format(stream_name))
+    LOGGER.info("Stream: {} - Currently Syncing".format(stream_name))
 
 
 # Round time based to day
@@ -183,7 +184,9 @@ def get_absolute_start_end_time(last_dttm, attribution_window):
         start = now_dttm - timedelta(days=attribution_window)
     elif delta_days > 89:
         start = now_dttm - timedelta(88)
-        LOGGER.info(f'Start date with attribution window exceeds max API history. Setting start date to {start}')
+        LOGGER.info(
+            f"Start date with attribution window exceeds max API history. Setting start date to {start}"
+        )
     else:
         start = last_dttm
 
@@ -193,11 +196,11 @@ def get_absolute_start_end_time(last_dttm, attribution_window):
 
 # POST QUEUED ASYNC JOB
 # pylint: disable=line-too-long
-def post_queued_async_jobs(client, entity, report_name,
-                           window_start, report_config):
+def post_queued_async_jobs(client, entity, report_name, window_start,
+                           report_config):
     LOGGER.info(
-        'Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job'.
-        format(report_name, entity, report_config['type']))
+        "Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job".
+        format(report_name, entity, report_config["type"]))
     # POST queued_job: asynchronous job
     queued_job = post_resource(client,
                                report_name,
@@ -208,12 +211,12 @@ def post_queued_async_jobs(client, entity, report_name,
 
 def report_is_ready(stream, client, entity, job_id):
     job_status = get_resource(stream, client, entity, job_id)
-    if job_status.get('status') == 'SUCCESS':
+    if job_status.get("status") == "SUCCESS":
         uri = None
         try:
-            uri = urlparse(job_status.get('location'))
+            uri = urlparse(job_status.get("location"))
         except Exception:
-            LOGGER.info(f'Found bad location URI {uri}')
+            LOGGER.info(f"Found bad location URI {uri}")
             raise Exception
         return True, uri.geturl()
     else:
@@ -224,8 +227,16 @@ def to_epoch(dttm):
     epoch_time = strptime_to_utc("19700101")
     return int((dttm - epoch_time).total_seconds())
 
-def sync_report(client, catalog, state, start_date, report_name, report_config,
-                tap_config, entity, selected_fields):
+
+def sync_report(client,
+                catalog,
+                state,
+                start_date,
+                report_name,
+                report_config,
+                tap_config,
+                entity,
+                selected_fields):
 
     # PROCESS:
     # Outer-outer loop (in sync): loop through accounts
@@ -238,10 +249,10 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
     # 2. POST ASYNC Job to Queue to get queued_job_id
     # 3. GET ASYNC Job Statuses and Download URLs (when complete)
     # 4. Download Data from URLs and Sync data to target
-    report_type = report_config.get('type')
-    advertiser_ids = tap_config.get('advertiserIds')
-    LOGGER.info('Report: {}, Entity: {}, Type: {}, Dimensions: {}'.format(
-        report_name, entity, report_type, report_config.get('dimensions')))
+    report_type = report_config.get("type")
+    advertiser_ids = tap_config.get("advertiserIds")
+    LOGGER.info("Report: {}, Entity: {}, Type: {}, Dimensions: {}".format(
+        report_name, entity, report_type, report_config.get("dimensions")))
 
     # Bookmark datetimes
     last_datetime = str(get_bookmark(state, report_name, entity, start_date))
@@ -249,7 +260,7 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
 
     # Get absolute start and end times
     attribution_window = int(
-        tap_config.get('attribution_window', DEFAULT_ATTRIBUTION_WINDOW))
+        tap_config.get("attribution_window", DEFAULT_ATTRIBUTION_WINDOW))
     abs_start, abs_end = get_absolute_start_end_time(last_dttm,
                                                      attribution_window)
 
@@ -258,42 +269,47 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
 
     # DATE WINDOW LOOP
     while window_start != abs_end:
-        window_start_str = window_start.strftime('%Y%m%d')
+        window_start_str = window_start.strftime("%Y%m%d")
 
-        LOGGER.info('Report: {} - Date window: {}'.format(
+        LOGGER.info("Report: {} - Date window: {}".format(
             report_name, window_start_str))
 
         # Dimensions for API request
-        api_dimensions = report_config.get('dimensions', report_dimension_metrics.get(report_type).get('dimensions'))
+        api_dimensions = report_config.get(
+            "dimensions",
+            report_dimension_metrics.get(report_type).get("dimensions"))
 
         # Add selected metrics for API request
         # if not tap_config.get('all_metrics'):
         selected_metrics = ""
         for selected in selected_fields:
             if selected not in dimension_fields:
-                selected_metrics = selected if not selected_metrics else selected_metrics + ',' + selected
+                selected_metrics = (selected if not selected_metrics else
+                                    selected_metrics + "," + selected)
 
         report_config = {
-            'reportDate': window_start_str,
-            'format': 'CSV',
-            'type': report_type.upper(),
-            'dimensions': api_dimensions,
-            'metrics': selected_metrics
+            "reportDate": window_start_str,
+            "format": "CSV",
+            "type": report_type.upper(),
+            "dimensions": api_dimensions,
+            "metrics": selected_metrics,
         }
 
         if advertiser_ids:
-            report_config['advertiserIds'] = advertiser_ids
+            report_config["advertiserIds"] = advertiser_ids
 
-        job_result = post_queued_async_jobs(client,
-                                            entity,
-                                            report_name,
-                                            window_start=window_start_str,
-                                            report_config=report_config)
+        job_result = post_queued_async_jobs(
+            client,
+            entity,
+            report_name,
+            window_start=window_start_str,
+            report_config=report_config,
+        )
 
-        queued_reports[job_result.get('reportId')] = {
+        queued_reports[job_result.get("reportId")] = {
             "job_result": job_result,
             "report_config": report_config,
-            "retries": 0
+            "retries": 0,
         }
 
         window_start = window_start + timedelta(days=DATE_WINDOW_SIZE)
@@ -317,10 +333,10 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
         job_id = queued_job_ids[job_iterator]
 
         # Exponential backoff to maxiumum of 256 seconds
-        job_retries = queued_reports[job_id]['retries']
+        job_retries = queued_reports[job_id]["retries"]
         wait_sec = 2**job_retries
         LOGGER.info(
-            f'Job: {job_id}, Report: {report_name}, Retry - Waiting {wait_sec} sec for async job to finish'
+            f"Job: {job_id}, Report: {report_name}, Retry - Waiting {wait_sec} sec for async job to finish"
         )
         time.sleep(wait_sec)
 
@@ -330,42 +346,52 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
                                           job_id=job_id)
 
         if ready:
-            report_date = queued_reports.get(job_id).get('report_config').get('reportDate')
-            LOGGER.info(f'Job {job_id}, report date {report_date} ready: retrieving location {location}')
+            report_date = (queued_reports.get(job_id).get("report_config").get(
+                "reportDate"))
+            LOGGER.info(
+                f"Job {job_id}, report date {report_date} ready: retrieving location {location}"
+            )
             time_extracted = utils.now()
 
             report_dttm = strptime_to_utc(report_date)
-            report_type = queued_reports.get(job_id).get('report_config').get(
-                'type').lower()
-            report_dimensions = queued_reports.get(job_id).get(
-                'report_config').get('dimensions')
+            report_type = (queued_reports.get(job_id).get("report_config").get(
+                "type").lower())
+            report_dimensions = (queued_reports.get(job_id).get(
+                "report_config").get("dimensions"))
 
             # PROCESS RESULTS TO TARGET RECORDS
             with metrics.record_counter(report_name) as counter:
                 for records in stream_csv(location):
                     if records:
-                        transform_report(schema,
-                            report_name, report_type, report_dttm,
-                            report_dimensions, records)
+                        transform_report(
+                            schema,
+                            report_name,
+                            report_type,
+                            report_dttm,
+                            report_dimensions,
+                            records,
+                        )
                         # Transform record with Singer Transformer
                         with Transformer() as transformer:
                             for record in records:
 
                                 # Evalueate max_bookmark_value
-                                if report_dttm > max_bookmark_value: # Datetime comparison
+                                if (report_dttm > max_bookmark_value):  # Datetime comparison
                                     max_bookmark_value = report_dttm
-                                
-                                singer_transform_record = transformer.transform(
-                                    record, schema,
-                                    stream_metadata)
 
-                                write_record(report_name,
-                                             singer_transform_record,
-                                             time_extracted=time_extracted)
+                                singer_transform_record = transformer.transform(
+                                    record, schema, stream_metadata)
+
+                                write_record(
+                                    report_name,
+                                    singer_transform_record,
+                                    time_extracted=time_extracted,
+                                )
                                 counter.increment()
                     else:
                         break
-                write_bookmark(state, report_name, entity, max_bookmark_value.strftime('%Y%m%d'))
+                write_bookmark(state, report_name, entity,
+                               max_bookmark_value.strftime("%Y%m%d"))
                 # Increment total_records
                 total_records = total_records + counter.value
             queued_job_ids.remove(job_id)
@@ -373,93 +399,84 @@ def sync_report(client, catalog, state, start_date, report_name, report_config,
             # Exponential to limit of 256 seconds
             # Probably need a max tries and exit
             if job_retries < 9:
-                queued_reports[job_id]['retries'] = queued_reports[job_id].get(
-                    'retries') + 1
+                queued_reports[job_id]["retries"] = (
+                    queued_reports[job_id].get("retries") + 1)
 
-        job_iterator = job_iterator + 1 if (
-            job_iterator + 1 < len(queued_job_ids)) else 0
+        job_iterator = (job_iterator + 1 if
+                        (job_iterator + 1 < len(queued_job_ids)) else 0)
 
     return total_records
     # End sync_report
 
-def stream_csv(url, batch_size=1024):
-    with requests.get(url, stream=True) as data:
-        reader = csv.DictReader(codecs.iterdecode(data.iter_lines(chunk_size=1024), 'utf-8'))
-        batch = []
-
-        for record in reader:
-            batch.append(record)
-            if len(batch) == batch_size:
-                yield batch
-                batch = []
-        if batch:
-            yield batch
 
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
     # Get config parameters
-    entity_list = config.get('entities').replace(' ', '').split(',')
-    start_date = config.get('start_date')
-    reports = config.get('reports', [])
+    entity_list = config.get("entities").replace(" ", "").split(",")
+    start_date = config.get("start_date")
+    reports = config.get("reports", [])
 
     # Get selected_streams from catalog, based on state last_stream
     #   last_stream = Previous currently synced stream, if the load was interrupted
     last_stream = singer.get_currently_syncing(state)
-    LOGGER.info('Last/Currently Syncing Stream: {}'.format(last_stream))
+    LOGGER.info("Last/Currently Syncing Stream: {}".format(last_stream))
 
     # Get ALL selected streams from catalog
     selected_streams = []
     for stream in catalog.get_selected_streams(state):
         selected_streams.append(stream.stream)
-    LOGGER.info('Sync Selected Streams: {}'.format(selected_streams))
+    LOGGER.info("Sync Selected Streams: {}".format(selected_streams))
     if not selected_streams:
         return
 
     # Get list of report streams to sync (from config and catalog)
     report_streams = []
     for report in reports:
-        report_name = report.get('name')
+        report_name = report.get("name")
         if report_name in selected_streams:
             report_streams.append(report_name)
-    LOGGER.info('Sync Report Streams: {}'.format(report_streams))
+    LOGGER.info("Sync Report Streams: {}".format(report_streams))
 
     # ENTITY OUTER LOOP
     for entity in entity_list:
-        LOGGER.info('Entity: {} - START Syncing'.format(entity))
+        LOGGER.info("Entity: {} - START Syncing".format(entity))
 
         # REPORT STREAMS LOOP
         total_entity_records = 0
         for report in reports:
-            report_name = report.get('name')
+            report_name = report.get("name")
             # if report_name in report_streams:
             update_currently_syncing(state, report_name)
 
-            LOGGER.info('Report: {} - START Syncing for Entity: {}'.format(
+            LOGGER.info("Report: {} - START Syncing for Entity: {}".format(
                 report_name, entity))
 
             # Write schema and log selected fields for stream
             write_schema(catalog, report_name)
 
             selected_fields = get_selected_fields(catalog, report_name)
-            LOGGER.info('Report: {} - selected_fields: {}'.format(
+            LOGGER.info("Report: {} - selected_fields: {}".format(
                 report_name, selected_fields))
 
-            total_records = sync_report(client=client,
-                                        catalog=catalog,
-                                        state=state,
-                                        start_date=start_date,
-                                        report_name=report_name,
-                                        report_config=report,
-                                        tap_config=config,
-                                        entity=entity,
-                                        selected_fields=selected_fields)
+            total_records = sync_report(
+                client=client,
+                catalog=catalog,
+                state=state,
+                start_date=start_date,
+                report_name=report_name,
+                report_config=report,
+                tap_config=config,
+                entity=entity,
+                selected_fields=selected_fields,
+            )
 
             total_entity_records = total_entity_records + total_records
             # pylint: disable=line-too-long
             LOGGER.info(
-                'Report: {} - FINISHED Syncing for Entity: {}, Total Records: {}'
+                "Report: {} - FINISHED Syncing for Entity: {}, Total Records: {}"
                 .format(report_name, entity, total_records))
             # pylint: enable=line-too-long
             update_currently_syncing(state, None)
 
-        LOGGER.info('Entity: {} - FINISHED Syncing, Total Records: {}'.format(entity, total_entity_records))
+        LOGGER.info("Entity: {} - FINISHED Syncing, Total Records: {}".format(
+            entity, total_entity_records))

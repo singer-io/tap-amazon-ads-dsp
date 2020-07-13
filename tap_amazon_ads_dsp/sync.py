@@ -6,12 +6,10 @@ from urllib.parse import urlparse
 import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
-from tap_amazon_ads_dsp.schema import (
-    DIMENSION_FIELDS,
-    REPORT_DIMENSION_METRICS,
-)
-from tap_amazon_ads_dsp.transform import transform_report
 from tap_amazon_ads_dsp.client import stream_csv
+from tap_amazon_ads_dsp.schema import (DIMENSION_FIELDS,
+                                       REPORT_DIMENSION_METRICS)
+from tap_amazon_ads_dsp.transform import transform_report
 
 LOGGER = singer.get_logger()
 DEFAULT_ATTRIBUTION_WINDOW = 14
@@ -350,7 +348,7 @@ def sync_report(client,
                             report_type,
                             report_dttm,
                             report_dimensions,
-                            records,
+                            records
                         )
                         # Transform record with Singer Transformer
                         with Transformer() as transformer:
@@ -372,7 +370,7 @@ def sync_report(client,
                     else:
                         break
                 write_bookmark(state, report_name, entity,
-                               max_bookmark_value.strftime("%Y%m%d"))
+                               max_bookmark_value.strftime('%Y-%m-%dT%H:%M:%S%z'))
                 # Increment total_records
                 total_records = total_records + counter.value
             queued_job_ids.remove(job_id)

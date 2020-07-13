@@ -10,7 +10,7 @@ LOGGER = singer.get_logger()
 REPORT_DIMENSION_METRICS = {
     "common": {
         "default_dimension_fields":
-        ["entityId", "advertiserName", "advertiserId", "report_date"],
+        ["entityId", "advertiserName", "advertiserId", "reportDate"],
         "fields": [
             "totalCost", "supplyCost", "amazonAudienceFee",
             "advertiserTimezone", "advertiserCountry", "amazonPlatformFee",
@@ -191,7 +191,7 @@ REPORT_DIMENSION_METRICS = {
         ]
     },
     "inventory": {
-        "default_dimension_fields": ["date"],
+        "default_dimension_fields": ["date", "placementSize", "placementName"],
         "dimensions": ["ORDER", "LINE_ITEM", "SITE", "SUPPLY"],
         "fields": [
             "agencyFee", "totalFee", "3pFeeAutomotive",
@@ -247,7 +247,7 @@ DIMENSION_FIELDS = [
     "lineItemBudget", "orderId", "lineItemExternalId", "orderStartDate",
     "orderBudget", "lineItemStartDate", "date", "siteName", "orderExternalId",
     "orderEndDate", "supplySourceName", "lineItemName", "lineItemId",
-    "report_date", "orderName", "orderCurrency", "advertiserName",
+    "reportDate", "orderName", "orderCurrency", "advertiserName",
     "__sdc_record_hash", "advertiserId", "lineItemEndDate", "entityId",
     "reportDate", "segment", "intervalEnd", "lineItemType", "intervalStart",
     "segmentMarketplaceId", "creativeSize", "creativeID", "creativeName",
@@ -343,7 +343,7 @@ def get_schemas(reports):
         mdata = metadata.get_standard_metadata(
             schema=schema,
             key_properties=['__sdc_record_hash'],
-            valid_replication_keys=['report_date'],
+            valid_replication_keys=['reportDate'],
             replication_method='INCREMENTAL')
         mdata = metadata.to_map(mdata)
         mdata = reduce(

@@ -1,6 +1,6 @@
+from singer import metadata
 from singer.catalog import Catalog, CatalogEntry, Schema
 from tap_amazon_ads_dsp.schema import get_schemas
-from singer import metadata
 
 
 def discover(reports):

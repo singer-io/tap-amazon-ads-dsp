@@ -25,10 +25,10 @@ def transform_report(schema, report_type, report_date,
                                                        report_dimensions)
 
     for record in report_data:
+        record['reportDate'] = report_date.strftime('%Y-%m-%dT%H:%M:%S%z')
         primary_keys = primary_keys_for_record(report_primary_keys, record)
         dims_md5 = str(hash_data(json.dumps(primary_keys, sort_keys=True)))
         record['__sdc_record_hash'] = dims_md5
-        record['report_date'] = report_date.strftime('%Y-%m-%dT%H:%M:%S%z')
 
         # Convert any percentages to floats
         for field, value in record.items():

@@ -150,6 +150,7 @@ REPORT_DIMENSION_METRICS = {
         ]
     },
     "campaign": {
+        "replication_key": "date",
         "default_dimension_fields": ["date"],
         "dimensions": ["ORDER", "LINE_ITEM", "CREATIVE"],
         "fields": [
@@ -191,6 +192,7 @@ REPORT_DIMENSION_METRICS = {
         ]
     },
     "inventory": {
+        "replication_key": "date",
         "default_dimension_fields": ["date", "placementSize", "placementName"],
         "dimensions": ["ORDER", "LINE_ITEM", "SITE", "SUPPLY"],
         "fields": [
@@ -233,6 +235,7 @@ REPORT_DIMENSION_METRICS = {
         ]
     },
     "audience": {
+        "replication_key": "intervalStart",
         "default_dimension_fields":
         ["intervalStart", "intervalEnd", "segment"],
         "dimensions": ["ORDER", "LINE_ITEM"],
@@ -330,6 +333,8 @@ def get_schemas(reports):
         report_type = report.get('type')
         report_dimensions = REPORT_DIMENSION_METRICS.get(report_type).get(
             'dimensions')
+        replication_key = REPORT_DIMENSION_METRICS.get(report_type).get(
+            'replication_key')
 
         report_path = get_abs_path(f'schemas/{report_type.lower()}.json')
 
@@ -343,7 +348,7 @@ def get_schemas(reports):
         mdata = metadata.get_standard_metadata(
             schema=schema,
             key_properties=['__sdc_record_hash'],
-            valid_replication_keys=['reportDate'],
+            valid_replication_keys=[replication_key],
             replication_method='INCREMENTAL')
         mdata = metadata.to_map(mdata)
         mdata = reduce(

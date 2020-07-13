@@ -124,6 +124,7 @@ class AmazonAdvertisingClient:
         return response
 
 
+# Stream CSV in batches of lines for transform and Singer write
 @backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError),
                       max_tries=5,
                       factor=2)

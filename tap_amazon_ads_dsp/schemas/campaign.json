@@ -118,7 +118,8 @@
 			"multipleOf": 0.000001
     },
     "totalPercentOfPurchasesNewToBrand14d": {
-      "type": ["null", "integer"]
+      "type": ["null", "number"],
+      "multipleOf": 0.0001
     },
     "totalAddToCart14d": {
       "type": ["null", "integer"]

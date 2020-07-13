@@ -4,6 +4,7 @@ from decimal import Decimal
 
 import singer
 from tap_amazon_ads_dsp.schema import fields_for_report_dimensions
+import decimal
 
 LOGGER = singer.get_logger()
 
@@ -30,10 +31,13 @@ def transform_report(schema, report_type, report_date,
         dims_md5 = str(hash_data(json.dumps(primary_keys, sort_keys=True)))
         record['__sdc_record_hash'] = dims_md5
 
-        # Convert any percentages to floats
+        # API returns 0.0000% for rate columns.
+        # Convert percentages to floats
+        # Very expensive operation
         for field, value in record.items():
-            if isinstance(value, str) and '%' in value:
-                ## Set precision of percentage fields based on schema multipleOf
+            ## Set precision of percentage fields based on schema multipleOf
+            type = schema['properties'][field].get('type')
+            if 'number' in type and value.endswith('%'):
                 precision = schema['properties'][field].get(
                     'multipleOf', 0.000001)
                 dec_ex = abs(Decimal(f'{precision}').as_tuple().exponent)

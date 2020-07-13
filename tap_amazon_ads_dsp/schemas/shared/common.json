@@ -815,7 +815,8 @@
 			"multipleOf": 0.0001
 		},
         "percentOfPurchasesNewToBrand14d": {
-            "type": ["null", "integer"]
+            "type": ["null", "number"],
+            "multipleOf": 0.0001
         },
         "purchaseButtonCPA14d": {
 			"type": ["null", "number"],

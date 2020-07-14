@@ -10,7 +10,7 @@ LOGGER = singer.get_logger()
 REPORT_DIMENSION_METRICS = {
     "common": {
         "default_dimension_fields":
-        ["entityId", "advertiserName", "advertiserId", "reportDate"],
+        ["entityId", "advertiserName", "advertiserId"],
         "fields": [
             "totalCost", "supplyCost", "amazonAudienceFee",
             "advertiserTimezone", "advertiserCountry", "amazonPlatformFee",
@@ -252,23 +252,41 @@ DIMENSION_FIELDS = [
     "orderEndDate", "supplySourceName", "lineItemName", "lineItemId",
     "reportDate", "orderName", "orderCurrency", "advertiserName",
     "__sdc_record_hash", "advertiserId", "lineItemEndDate", "entityId",
-    "reportDate", "segment", "intervalEnd", "lineItemType", "intervalStart",
+    "reportDate", "segment", "intervalEnd", "lineitemtype", "intervalStart",
     "segmentMarketplaceId", "creativeSize", "creativeID", "creativeName",
     "creativeType"
 ]
 
 DIMENSION_PRIMARY_KEYS = {
-    "ORDER": [
-        "orderName", "orderId", "orderStartDate", "orderEndDate",
-        "orderBudget", "orderExternalId", "orderCurrency"
-    ],
-    "LINE_ITEM": [
-        "lineItemName", "lineItemId", "lineItemStartDate", "lineItemEndDate",
-        "lineItemBudget", "lineItemExternalId"
-    ],
-    "CREATIVE": ["creativeName", "creativeID", "creativeType", "creativeSize"],
-    "SITE": ["siteName"],
-    "SUPPLY": ["supplySourceName"]
+    "common": {
+        "primary_keys": ["entityId", "advertiserId"]
+    },
+    "ORDER": {
+        "fields": [
+            "orderName", "orderId", "orderStartDate", "orderEndDate",
+            "orderBudget", "orderExternalId", "orderCurrency"
+        ],
+        "primary_keys": ["orderId"]
+    },
+    "LINE_ITEM": {
+        "fields": [
+            "lineItemName", "lineItemId", "lineItemStartDate",
+            "lineItemEndDate", "lineItemBudget", "lineItemExternalId"
+        ],
+        "primary_keys": ["lineItemId"]
+    },
+    "CREATIVE": {
+        "fields": ["creativeName", "creativeID", "creativeType", "creativeSize"],
+        "primary_keys": ["creativeID"]
+    },
+    "SITE": {
+        "fields": ["siteName"],
+        "primary_keys": ["siteName"]
+    },
+    "SUPPLY": {
+        "fields": ["supplySourceName"],
+        "primary_keys": ["supplySourceName"]
+    }
 }
 
 # Reference:
@@ -309,7 +327,7 @@ def fields_for_report_dimensions(report_type, report_dimensions):
             'default_dimension_fields']:
         report_primary_keys.append(field)
     for dimension in report_dimensions:
-        report_primary_keys.extend(DIMENSION_PRIMARY_KEYS.get(dimension))
+        report_primary_keys.extend(DIMENSION_PRIMARY_KEYS.get(dimension).get('fields'))
     for field in REPORT_DIMENSION_METRICS[report_type][
             'default_dimension_fields']:
         report_primary_keys.append(field)
@@ -320,6 +338,11 @@ def fields_for_report_dimensions(report_type, report_dimensions):
     report_primary_keys.sort()
     return report_primary_keys
 
+def get_report_dimensions(report):
+    if report.get('dimensions'):
+        return report.get('dimensions')
+    return REPORT_DIMENSION_METRICS.get(report.get('type')).get(
+            'dimensions')
 
 def get_schemas(reports):
     schemas = {}
@@ -331,8 +354,7 @@ def get_schemas(reports):
     for report in reports:
         report_name = report.get('name')
         report_type = report.get('type')
-        report_dimensions = REPORT_DIMENSION_METRICS.get(report_type).get(
-            'dimensions')
+        report_dimensions = get_report_dimensions(report)
         replication_key = REPORT_DIMENSION_METRICS.get(report_type).get(
             'replication_key')
 

@@ -10,7 +10,7 @@ LOGGER = singer.get_logger()
 REPORT_DIMENSION_METRICS = {
     "common": {
         "default_dimension_fields":
-        ["entityId", "advertiserName", "advertiserId"],
+        ["entityId", "advertiserId"],
         "fields": [
             "totalCost", "supplyCost", "amazonAudienceFee",
             "advertiserTimezone", "advertiserCountry", "amazonPlatformFee",

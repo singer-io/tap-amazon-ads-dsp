@@ -40,26 +40,26 @@ def write_record(stream_name, record, time_extracted):
         raise err
 
 
-def get_bookmark(state, stream, entity, default):
+def get_bookmark(state, stream, profile, default):
     # default only populated on initial sync
     if ((state is None) or ("bookmarks" not in state)
             or (stream not in state["bookmarks"])
-            or (entity not in state["bookmarks"][stream])):
+            or (profile not in state["bookmarks"][stream])):
         return default
-    return state.get("bookmarks", {}).get(stream).get(entity, default)
+    return state.get("bookmarks", {}).get(stream).get(profile, default)
 
 
-def write_bookmark(state, stream, entity, value):
+def write_bookmark(state, stream, profile, value):
     if "bookmarks" not in state:
         state["bookmarks"] = {}
     if stream not in state["bookmarks"]:
         state["bookmarks"][stream] = {}
-    if entity not in state["bookmarks"][stream]:
-        state["bookmarks"][stream][entity] = {}
-    state["bookmarks"][stream][entity] = value
+    if profile not in state["bookmarks"][stream]:
+        state["bookmarks"][stream][profile] = {}
+    state["bookmarks"][stream][profile] = value
     LOGGER.info(
-        "Stream: {}, Entity {} - Write state, bookmark value: {}".format(
-            stream, entity, value))
+        "Stream: {}, Profile {} - Write state, bookmark value: {}".format(
+            stream, profile, value))
     singer.write_state(state)
 
 
@@ -81,10 +81,10 @@ def obj_to_dict(obj):
     return result
 
 
-def get_resource(stream_name, client, entity, job_id,):
+def get_resource(stream_name, client, profile, job_id,):
     try:
         response = client.make_request(method="GET",
-                                       entity=entity,
+                                       profile=profile,
                                        job=job_id)
     except Exception as err:
         LOGGER.error("Stream: {} - ERROR: {}".format(stream_name, err))
@@ -93,10 +93,10 @@ def get_resource(stream_name, client, entity, job_id,):
     return response_body
 
 
-def post_resource(client, report_name, entity, body=None):
+def post_resource(client, report_name, profile, body=None):
     try:
         response = client.make_request(method="POST",
-                                       entity=entity,
+                                       profile=profile,
                                        body=body)
     except Exception as err:
         LOGGER.error("Report: {} - ERROR: {}".format(report_name, err))
@@ -179,20 +179,20 @@ def get_absolute_start_end_time(last_dttm, attribution_window):
 
 # POST QUEUED ASYNC JOB
 # pylint: disable=line-too-long
-def post_queued_async_jobs(client, entity, report_name, report_config):
+def post_queued_async_jobs(client, profile, report_name, report_config):
     LOGGER.info(
         "Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job".
-        format(report_name, entity, report_config["type"]))
+        format(report_name, profile, report_config["type"]))
     # POST queued_job: asynchronous job
     queued_job = post_resource(client,
                                report_name,
-                               entity,
+                               profile,
                                body=json.dumps(report_config))
     return queued_job
 
 
-def report_is_ready(stream, client, entity, job_id):
-    job_status = get_resource(stream, client, entity, job_id)
+def report_is_ready(stream, client, profile, job_id):
+    job_status = get_resource(stream, client, profile, job_id)
     if job_status.get("status") == "SUCCESS":
         uri = None
         try:
@@ -216,13 +216,13 @@ def sync_report(client,
                 report_name,
                 report_config,
                 tap_config,
-                entity,
+                profile,
                 selected_fields):
 
     # PROCESS:
     # Outer-outer loop (in sync): loop through accounts
     # Outer loop (in sync): loop through reports selected in catalog
-    #   Each report definition: name, entity, dimensions
+    #   Each report definition: name, profile, dimensions
     #
     # For each Report:
     # 1. Determine start/end dates and date windows (rounded, limited, timezone);
@@ -232,11 +232,11 @@ def sync_report(client,
     # 4. Download Data from URLs and Sync data to target
     report_type = report_config.get("type")
     advertiser_ids = tap_config.get("advertiserIds")
-    LOGGER.info("Report: {}, Entity: {}, Type: {}, Dimensions: {}".format(
-        report_name, entity, report_type, report_config.get("dimensions")))
+    LOGGER.info("Report: {}, Profile: {}, Type: {}, Dimensions: {}".format(
+        report_name, profile, report_type, report_config.get("dimensions")))
 
     # Bookmark datetimes
-    last_datetime = str(get_bookmark(state, report_name, entity, start_date))
+    last_datetime = str(get_bookmark(state, report_name, profile, start_date))
     last_dttm = strptime_to_utc(last_datetime)
 
     # Get absolute start and end times
@@ -391,7 +391,7 @@ def sync_report(client,
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
     # Get config parameters
-    entity_list = config.get("entities").replace(" ", "").split(",")
+    profile_list = config.get("profiles").replace(" ", "").split(",")
     start_date = config.get("start_date")
     reports = config.get("reports", [])
 
@@ -416,19 +416,19 @@ def sync(client, config, catalog, state):
             report_streams.append(report_name)
     LOGGER.info("Sync Report Streams: {}".format(report_streams))
 
-    # ENTITY OUTER LOOP
-    for entity in entity_list:
-        LOGGER.info("Entity: {} - START Syncing".format(entity))
+    # PROFILE OUTER LOOP
+    for profile in profile_list:
+        LOGGER.info("Profile: {} - START Syncing".format(profile))
 
         # REPORT STREAMS LOOP
-        total_entity_records = 0
+        total_profile_records = 0
         for report in reports:
             report_name = report.get("name")
             # if report_name in report_streams:
             update_currently_syncing(state, report_name)
 
-            LOGGER.info("Report: {} - START Syncing for Entity: {}".format(
-                report_name, entity))
+            LOGGER.info("Report: {} - START Syncing for Profile: {}".format(
+                report_name, profile))
 
             # Write schema and log selected fields for stream
             write_schema(catalog, report_name)
@@ -445,17 +445,17 @@ def sync(client, config, catalog, state):
                 report_name=report_name,
                 report_config=report,
                 tap_config=config,
-                entity=entity,
+                profile=profile,
                 selected_fields=selected_fields,
             )
 
-            total_entity_records = total_entity_records + total_records
+            total_profile_records = total_profile_records + total_records
             # pylint: disable=line-too-long
             LOGGER.info(
-                "Report: {} - FINISHED Syncing for Entity: {}, Total Records: {}"
-                .format(report_name, entity, total_records))
+                "Report: {} - FINISHED Syncing for Profile: {}, Total Records: {}"
+                .format(report_name, profile, total_records))
             # pylint: enable=line-too-long
             update_currently_syncing(state, None)
 
-        LOGGER.info("Entity: {} - FINISHED Syncing, Total Records: {}".format(
-            entity, total_entity_records))
+        LOGGER.info("Profile: {} - FINISHED Syncing, Total Records: {}".format(
+            profile, total_profile_records))

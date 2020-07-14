@@ -65,7 +65,7 @@ class AmazonAdvertisingClient:
     def make_request(self,
                      url=None,
                      method=None,
-                     entity=None,
+                     profile=None,
                      job=None,
                      params=None,
                      body=None,
@@ -79,7 +79,7 @@ class AmazonAdvertisingClient:
         headers = {
             'Authorization': 'Bearer {}'.format(self.access_token),
             'Amazon-Advertising-API-ClientId': self.config.get('client_id'),
-            'Amazon-Advertising-API-Scope': entity,
+            'Amazon-Advertising-API-Scope': profile,
         }
 
         if method == "GET":

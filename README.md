@@ -7,16 +7,40 @@ spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md).
 This tap:
 
 - Pulls raw data from the [Amazon Advertising DSP API, Beta](https://advertising.amazon.com/API/docs/en-us/dsp-reports-beta-3p/#/Reports)
-- Extracts Asyncronous Reports using:
-  - Supports many reports, each with Report Config Settings:
-    - **Entity**: Reports are selected by entity id(Amazon Ads profile id)
-    - **Dimensions**: 5 dimensions types(ORDER, LINE_ITEM, CREATIVE, SITE, SUPPLY)
+- Extracts Asyncronous Reports:
+  - Supports report types: Audience, Campaign, Inventory
+  - **Profile**: Reports are configured by entity id(Amazon Ads profile id)
+    - Profiles/entities may be discovered via https://advertising-api.amazon.com/v2/profiles
+    - 
+    - A list of entities may be configured
   - async_results (download URL)
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state
 
+## DSP API Setup and Access
+
+In order to use the Amazon Advertising DSP API the following high-level steps must be completed.
+
+### Account Setup
+
+[Account setup documentation](https://advertising.amazon.com/API/docs/en-us/setting-up/account-setup). This creates the developer account whose credentials will be used later to generate the required refresh token used for the Tap configuration.
+
+### Advertising API application
+
+[Advertising API Application documentation](https://advertising.amazon.com/about-api). This application will generate an initial email requesting further information. And finally, an approval email will be received. This email will detail the next steps and is required for the next section, Additional Setup Steps for the DSP API.
+
+### Additional Setup Steps for the DSP API
+
+[Additional steps documentation](https://advertising.amazon.com/API/docs/en-us/setting-up/dsp). This document describes the additional setup steps required to onboard an application for use with the DSP API. Once the approval email is received following the directions and those documented here.
+
+### API Authorization and refresh tokens
+
+[Create API Authorization and Refresh Token](https://advertising.amazon.com/API/docs/en-us/setting-up/generate-api-tokens), this document describes the steps required to generate the authorization and refresh tokens.
+
 ## Authentication
-Amazon Advertising requires authentication headers using OAuth 2 with an access token obtained via 3-legged OAuth flow. The access token, once generated, is permanent, but request tokens are short-lived without a documented expiry.
+OAuth is the required method of authenticating. The Amazon Advertising API manages permissions using the Login with Amazon service. The API uses authorization and refresh tokens in a standard OAuth 2.0 flow. Further documentation available here.
+
+The refresh token once generated is permanent, but access tokens are short-lived. The tap manages refreshing access tokens throughout the sync lifecycle.
 
 
 ## Quick Start
@@ -57,11 +81,10 @@ Amazon Advertising requires authentication headers using OAuth 2 with an access 
   "user_agent": "tap-amazon-advertising <user@email.com>",
   "entities": "2389773460286997, 3393509102664206",
   "attribution_window": "14",
-  "all_metrics": true,
   "reports": [
     {
       "name": "inventory_report",
-      "type": "inventory",
+      "type": "inventory"
     },
     {
       "name": "campaign_report",

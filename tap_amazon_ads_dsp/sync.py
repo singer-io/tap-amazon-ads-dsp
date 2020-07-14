@@ -181,7 +181,7 @@ def get_absolute_start_end_time(last_dttm, attribution_window):
 # pylint: disable=line-too-long
 def post_queued_async_jobs(client, profile, report_name, report_config):
     LOGGER.info(
-        "Report: {}, Entity: {}, Type: {}, Date - POST ASYNC queued_job".
+        "Report: {}, Profile: {}, Type: {}, Date - POST ASYNC queued_job".
         format(report_name, profile, report_config["type"]))
     # POST queued_job: asynchronous job
     queued_job = post_resource(client,
@@ -281,7 +281,7 @@ def sync_report(client,
 
         job_result = post_queued_async_jobs(
             client,
-            entity,
+            profile,
             report_name,
             report_config,
         )
@@ -322,7 +322,7 @@ def sync_report(client,
 
         ready, location = report_is_ready(stream,
                                           client,
-                                          entity,
+                                          profile,
                                           job_id=job_id)
 
         if ready:
@@ -369,7 +369,7 @@ def sync_report(client,
                                 counter.increment()
                     else:
                         break
-                write_bookmark(state, report_name, entity,
+                write_bookmark(state, report_name, profile,
                                max_bookmark_value.strftime('%Y-%m-%dT%H:%M:%S%z'))
                 # Increment total_records
                 total_records = total_records + counter.value

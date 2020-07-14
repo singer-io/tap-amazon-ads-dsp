@@ -165,19 +165,22 @@ The refresh token once generated is permanent, but access tokens are short-lived
     ```
     Check tap resulted in the following:
     ```bash
+    Checking stdin for valid Singer-formatted data
     The output is valid.
-    It contained 8240 messages for 16 streams.
+    It contained 1225 messages for 3 streams.
 
-        16 schema messages
-    8108 record messages
-        116 state messages
+          3 schema messages
+      1198 record messages
+        24 state messages
 
     Details by stream:
-    +-----------------------------+---------+---------+
-    | stream                      | records | schemas |
-    +-----------------------------+---------+---------+
-    | **ENDPOINT_A**              | 23      | 1       |
-    +-----------------------------+---------+---------+
+    +------------------+---------+---------+
+    | stream           | records | schemas |
+    +------------------+---------+---------+
+    | inventory_report | 378     | 1       |
+    | audience_report  | 788     | 1       |
+    | campaign_report  | 32      | 1       |
+    +------------------+---------+---------+
     ```
 ---
 

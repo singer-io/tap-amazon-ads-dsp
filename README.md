@@ -9,9 +9,8 @@ This tap:
 - Pulls raw data from the [Amazon Advertising DSP API, Beta](https://advertising.amazon.com/API/docs/en-us/dsp-reports-beta-3p/#/Reports)
 - Extracts Asyncronous Reports:
   - Supports report types: Audience, Campaign, Inventory
-  - **Profile**: Reports are configured by entity id(Amazon Ads profile id)
+  - **Profile**: Reports are configured by Entity(Amazon Ads profile id)
     - Profiles/entities may be discovered via https://advertising-api.amazon.com/v2/profiles
-    - 
     - A list of entities may be configured
   - async_results (download URL)
 - Outputs the schema for each resource
@@ -73,29 +72,29 @@ The refresh token once generated is permanent, but access tokens are short-lived
 
     ```json
     {
-  "client_id": "",
-  "client_secret": "",
-  "refresh_token": "",
-  "redirect_uri": "",
-  "start_date": "2020-07-01T00:00:00Z",
-  "user_agent": "tap-amazon-advertising <user@email.com>",
-  "entities": "2389773460286997, 3393509102664206",
-  "attribution_window": "14",
-  "reports": [
-    {
-      "name": "inventory_report",
-      "type": "inventory"
-    },
-    {
-      "name": "campaign_report",
-      "type": "campaign",
-    },
-    {
-      "name": "audience_report",
-      "type": "audience"
+      "client_id": "",
+      "client_secret": "",
+      "refresh_token": "",
+      "redirect_uri": "",
+      "start_date": "2020-07-01T00:00:00Z",
+      "user_agent": "tap-amazon-advertising <user@email.com>",
+      "entities": ["2389773460286997, 3393509102664206"],
+      "attribution_window": "14",
+      "reports": [
+        {
+          "name": "inventory_report",
+          "type": "inventory"
+        },
+        {
+          "name": "campaign_report",
+          "type": "campaign",
+        },
+        {
+          "name": "audience_report",
+          "type": "audience"
+        }
+      ]
     }
-  ]
-}
     ```
     
     Optionally, also create a `state.json` file. `currently_syncing` is an optional attribute used for identifying the last object to be synced in case the job is interrupted mid-stream. The next run would begin where the last job left off.

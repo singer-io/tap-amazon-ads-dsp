@@ -261,7 +261,6 @@ def sync_report(client,
             REPORT_DIMENSION_METRICS.get(report_type).get("dimensions"))
 
         # Add selected metrics for API request
-        # if not tap_config.get('all_metrics'):
         selected_metrics = ""
         for selected in selected_fields:
             if selected not in DIMENSION_FIELDS:
@@ -391,7 +390,7 @@ def sync_report(client,
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
     # Get config parameters
-    profile_list = config.get("profiles").replace(" ", "").split(",")
+    profile_list = config.get("profiles")
     start_date = config.get("start_date")
     reports = config.get("reports", [])
 

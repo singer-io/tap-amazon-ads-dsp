@@ -45,7 +45,9 @@ def main():
 
         catalog = parsed_args.catalog
 
-        reports = config.get('reports', {})
+        reports = config.get('reports', [])
+        if isinstance(reports, str):
+            reports = json.loads(reports)
 
         if parsed_args.discover:
             do_discover(reports)

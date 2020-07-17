@@ -8,7 +8,7 @@ from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
 from tap_amazon_ads_dsp.client import stream_csv
 from tap_amazon_ads_dsp.schema import (DIMENSION_FIELDS,
-                                       REPORT_DIMENSION_METRICS)
+                                       REPORT_STREAMS)
 from tap_amazon_ads_dsp.transform import transform_report
 
 LOGGER = singer.get_logger()
@@ -258,7 +258,7 @@ def sync_report(client,
         # Dimensions for API request
         api_dimensions = report_config.get(
             "dimensions",
-            REPORT_DIMENSION_METRICS.get(report_type).get("dimensions"))
+            REPORT_STREAMS.get(report_type).get("dimensions"))
 
         # Add selected metrics for API request
         selected_metrics = ""
@@ -271,6 +271,7 @@ def sync_report(client,
             "reportDate": window_start_str,
             "format": "CSV",
             "type": report_type.upper(),
+            "timeUnit": REPORT_STREAMS.get(report_type).get("timeUnit"),
             "dimensions": api_dimensions,
             "metrics": selected_metrics,
         }

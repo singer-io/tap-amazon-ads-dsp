@@ -7,7 +7,7 @@ from singer import metadata
 
 LOGGER = singer.get_logger()
 
-REPORT_DIMENSION_METRICS = {
+REPORT_STREAMS = {
     "common": {
         "default_dimension_fields":
         ["entityId", "advertiserId"],
@@ -153,6 +153,7 @@ REPORT_DIMENSION_METRICS = {
         "replication_key": "date",
         "default_dimension_fields": ["date"],
         "dimensions": ["ORDER", "LINE_ITEM", "CREATIVE"],
+        "timeUnit": "DAILY",
         "fields": [
             "agencyFee", "totalFee", "3pFeeAutomotive",
             "3pFeeAutomotiveAbsorbed", "3pFeeComScore",
@@ -195,6 +196,7 @@ REPORT_DIMENSION_METRICS = {
         "replication_key": "date",
         "default_dimension_fields": ["date", "placementSize", "placementName"],
         "dimensions": ["ORDER", "LINE_ITEM", "SITE", "SUPPLY"],
+        "timeUnit": "DAILY",
         "fields": [
             "agencyFee", "totalFee", "3pFeeAutomotive",
             "3pFeeAutomotiveAbsorbed", "3pFeeComScore",
@@ -239,6 +241,7 @@ REPORT_DIMENSION_METRICS = {
         "default_dimension_fields":
         ["intervalStart", "intervalEnd", "segment"],
         "dimensions": ["ORDER", "LINE_ITEM"],
+        "timeUnit": "SUMMARY",
         "fields": [
             "segmentClassCode", "segmentSource", "segmentType",
             "segmentMarketplaceID", "targetingMethod"
@@ -323,12 +326,12 @@ def resolve_schema_references(schema, refs):
 def fields_for_report_dimensions(report_type, report_dimensions):
     report_primary_keys = []
     # All reports contains default
-    for field in REPORT_DIMENSION_METRICS['common'][
+    for field in REPORT_STREAMS['common'][
             'default_dimension_fields']:
         report_primary_keys.append(field)
     for dimension in report_dimensions:
         report_primary_keys.extend(DIMENSION_PRIMARY_KEYS.get(dimension).get('fields'))
-    for field in REPORT_DIMENSION_METRICS[report_type][
+    for field in REPORT_STREAMS[report_type][
             'default_dimension_fields']:
         report_primary_keys.append(field)
 
@@ -341,7 +344,7 @@ def fields_for_report_dimensions(report_type, report_dimensions):
 def get_report_dimensions(report):
     if report.get('dimensions'):
         return report.get('dimensions')
-    return REPORT_DIMENSION_METRICS.get(report.get('type')).get(
+    return REPORT_STREAMS.get(report.get('type')).get(
             'dimensions')
 
 def get_schemas(reports):
@@ -355,7 +358,7 @@ def get_schemas(reports):
         report_name = report.get('name')
         report_type = report.get('type')
         report_dimensions = get_report_dimensions(report)
-        replication_key = REPORT_DIMENSION_METRICS.get(report_type).get(
+        replication_key = REPORT_STREAMS.get(report_type).get(
             'replication_key')
 
         report_path = get_abs_path(f'schemas/{report_type.lower()}.json')

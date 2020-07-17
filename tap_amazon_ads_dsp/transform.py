@@ -3,7 +3,7 @@ import json
 from decimal import Decimal
 
 import singer
-from tap_amazon_ads_dsp.schema import fields_for_report_dimensions, DIMENSION_PRIMARY_KEYS, REPORT_DIMENSION_METRICS
+from tap_amazon_ads_dsp.schema import fields_for_report_dimensions, DIMENSION_PRIMARY_KEYS, REPORT_STREAMS
 import decimal
 
 LOGGER = singer.get_logger()
@@ -27,7 +27,7 @@ def get_primary_keys(report_dimensions, report_type):
     for dim in report_dimensions:
         report_primary_keys.extend(DIMENSION_PRIMARY_KEYS.get(dim).get('primary_keys'))
     report_primary_keys.extend(DIMENSION_PRIMARY_KEYS.get('common').get('primary_keys'))
-    report_primary_keys.extend(REPORT_DIMENSION_METRICS.get(report_type).get('default_dimension_fields'))
+    report_primary_keys.extend(REPORT_STREAMS.get(report_type).get('default_dimension_fields'))
     return report_primary_keys
 
 # Transform for report_data in sync_report

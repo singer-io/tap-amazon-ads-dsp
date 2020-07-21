@@ -22,6 +22,7 @@ setup(name='tap-amazon-ads-dsp',
       package_data={
           'tap_amazon_ads_dsp': [
               'schemas/*.json',
+              'schemas/shared/*.json'
               'tests/*.py'
           ]
       })

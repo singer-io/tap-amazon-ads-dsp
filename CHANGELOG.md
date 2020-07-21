@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.4
+  * Fix typo in package setup [#4](https://github.com/singer-io/tap-amazon-ads-dsp/pull/4)
+
 ## 0.0.3
   * Fix package setup for shared schemas [#3](https://github.com/singer-io/tap-amazon-ads-dsp/pull/3)
 

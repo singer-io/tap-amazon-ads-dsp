@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='tap-amazon-ads-dsp',
-      version='0.0.3',
+      version='0.0.4',
       description='Singer.io tap for extracting data from the Amazon Advertising DSP v1.0 API',
       author='scott.coleman@bytecode.io',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
@@ -22,7 +22,7 @@ setup(name='tap-amazon-ads-dsp',
       package_data={
           'tap_amazon_ads_dsp': [
               'schemas/*.json',
-              'schemas/shared/*.json'
+              'schemas/shared/*.json',
               'tests/*.py'
           ]
       })

@@ -394,6 +394,8 @@ def sync(client, config, catalog, state):
     profile_list = config.get("profiles")
     start_date = config.get("start_date")
     reports = config.get("reports", [])
+    if isinstance(reports, str):
+        reports = json.loads(reports)
 
     # Get selected_streams from catalog, based on state last_stream
     #   last_stream = Previous currently synced stream, if the load was interrupted

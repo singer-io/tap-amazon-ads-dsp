@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.5
+  * Allow passing reports config as str in sync [#5](https://github.com/singer-io/tap-amazon-ads-dsp/pull/5)
+
 ## 0.0.4
   * Fix typo in package setup [#4](https://github.com/singer-io/tap-amazon-ads-dsp/pull/4)
 

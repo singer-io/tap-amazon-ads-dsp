@@ -1,9 +1,23 @@
 {
-    "client_id": "",
-    "client_secret": "",
-    "refresh_token": "",
-    "redirect_uri": "",
-    "profile_id": "",
-    "start_date": "2019-04-01",
-    "user_agent": "tap-amazon-advertising <user@email.com>"
+  "client_id": "the_client_id",
+  "client_secret": "the_client_secret",
+  "refresh_token": "the_refresh_token",
+  "redirect_uri": "https://the.redirect.url",
+  "start_date": "2020-07-01T00:00:00Z",
+  "user_agent": "tap-amazon-advertising <user@email.com>",
+  "profiles": [ "0123456789" ],
+  "reports": [
+    {
+      "name": "campaign_report",
+      "type": "campaign"
+    },
+    {
+      "name": "audience_report",
+      "type": "audience"
+    },
+    {
+      "name": "inventory_report",
+      "type": "inventory"
+    }
+  ]
 }

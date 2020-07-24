@@ -391,7 +391,10 @@ def sync_report(client,
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
     # Get config parameters
-    profile_list = config.get("profiles")
+    profiles = config.get("profiles")
+    if isinstance(profiles, str):
+        profiles = profiles.replace(" ", "").split(",")
+
     start_date = config.get("start_date")
     reports = config.get("reports", [])
     if isinstance(reports, str):
@@ -419,7 +422,7 @@ def sync(client, config, catalog, state):
     LOGGER.info("Sync Report Streams: {}".format(report_streams))
 
     # PROFILE OUTER LOOP
-    for profile in profile_list:
+    for profile in profiles:
         LOGGER.info("Profile: {} - START Syncing".format(profile))
 
         # REPORT STREAMS LOOP

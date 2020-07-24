@@ -78,7 +78,7 @@ The refresh token once generated is permanent, but access tokens are short-lived
       "redirect_uri": "",
       "start_date": "2020-07-01T00:00:00Z",
       "user_agent": "tap-amazon-advertising <user@email.com>",
-      "entities": ["2389773460286997, 3393509102664206"],
+      "profiles": ["2389773460286997, 3393509102664206"],
       "attribution_window": "14",
       "reports": [
         {

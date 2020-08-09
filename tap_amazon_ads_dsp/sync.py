@@ -1,5 +1,6 @@
 import json
 import time
+from collections import OrderedDict
 from datetime import timedelta
 from urllib.parse import urlparse
 
@@ -7,8 +8,7 @@ import singer
 from singer import Transformer, metadata, metrics, utils
 from singer.utils import strptime_to_utc
 from tap_amazon_ads_dsp.client import stream_csv
-from tap_amazon_ads_dsp.schema import (DIMENSION_FIELDS,
-                                       REPORT_STREAMS)
+from tap_amazon_ads_dsp.schema import DIMENSION_FIELDS, REPORT_STREAMS
 from tap_amazon_ads_dsp.transform import transform_report
 
 LOGGER = singer.get_logger()
@@ -246,7 +246,7 @@ def sync_report(client,
                                                      attribution_window)
 
     window_start = abs_start
-    queued_reports = {}
+    queued_reports = OrderedDict()
 
     # DATE WINDOW LOOP
     while window_start != abs_end:
@@ -307,10 +307,9 @@ def sync_report(client,
     # ASYNC RESULTS DOWNLOAD / PROCESS LOOP
     # - Reports endpoints returns SUCCESS and URI location when report is ready
     # - Process queued reports keeping track of retries and adjusting backoff until report is ready
-    job_iterator = 0
     max_bookmark_value = last_dttm
     while queued_job_ids:
-        job_id = queued_job_ids[job_iterator]
+        job_id = queued_job_ids[0]
 
         # Exponential backoff to maxiumum of 256 seconds
         job_retries = queued_reports[job_id]["retries"]
@@ -380,9 +379,6 @@ def sync_report(client,
             if job_retries < 9:
                 queued_reports[job_id]["retries"] = (
                     queued_reports[job_id].get("retries") + 1)
-
-        job_iterator = (job_iterator + 1 if
-                        (job_iterator + 1 < len(queued_job_ids)) else 0)
 
     return total_records
     # End sync_report

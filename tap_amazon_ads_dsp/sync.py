@@ -268,7 +268,8 @@ def sync_report(client,
                                     selected_metrics + "," + selected)
 
         report_config = {
-            "reportDate": window_start_str,
+            "startDate": window_start_str,
+            "endDate": window_start_str,
             "format": "CSV",
             "type": report_type.upper(),
             "timeUnit": REPORT_STREAMS.get(report_type).get("timeUnit"),
@@ -288,8 +289,7 @@ def sync_report(client,
 
         queued_reports[job_result.get("reportId")] = {
             "job_result": job_result,
-            "report_config": report_config,
-            "retries": 0,
+            "report_config": report_config
         }
 
         window_start = window_start + timedelta(days=DATE_WINDOW_SIZE)
@@ -306,16 +306,20 @@ def sync_report(client,
 
     # ASYNC RESULTS DOWNLOAD / PROCESS LOOP
     # - Reports endpoints returns SUCCESS and URI location when report is ready
-    # - Process queued reports keeping track of retries and adjusting backoff until report is ready
+    # - Process queued reports in order 
+    # - Retry with exponential backoff limited to 512 sec
     max_bookmark_value = last_dttm
+    job_retries = 0
     while queued_job_ids:
         job_id = queued_job_ids[0]
 
-        # Exponential backoff to maxiumum of 256 seconds
-        job_retries = queued_reports[job_id]["retries"]
+        report_date = (queued_reports.get(job_id).get("report_config").get(
+                "startDate"))
+
+        # Exponential backoff to maxiumum of 512 seconds
         wait_sec = 2**job_retries
         LOGGER.info(
-            f"Job: {job_id}, Report: {report_name}, Retry - Waiting {wait_sec} sec for async job to finish"
+            f"Job: {job_id}, Report: {report_name}, report date {report_date}: Retry - Waiting {wait_sec} sec for async job to finish"
         )
         time.sleep(wait_sec)
 
@@ -324,11 +328,9 @@ def sync_report(client,
                                           profile,
                                           job_id=job_id)
 
-        if ready:
-            report_date = (queued_reports.get(job_id).get("report_config").get(
-                "reportDate"))
+        if ready:            
             LOGGER.info(
-                f"Job {job_id}, report date {report_date} ready: retrieving location {location}"
+                f"Job {job_id}, Report: {report_name}, report date {report_date} ready: retrieving location {location}"
             )
             time_extracted = utils.now()
 
@@ -372,13 +374,13 @@ def sync_report(client,
                                max_bookmark_value.strftime('%Y-%m-%dT%H:%M:%S%z'))
                 # Increment total_records
                 total_records = total_records + counter.value
+                job_retries = 0
             queued_job_ids.remove(job_id)
         else:
-            # Exponential to limit of 256 seconds
+            # Exponential to limit of 512 seconds
             # Probably need a max tries and exit
             if job_retries < 9:
-                queued_reports[job_id]["retries"] = (
-                    queued_reports[job_id].get("retries") + 1)
+                job_retries += 1
 
     return total_records
     # End sync_report

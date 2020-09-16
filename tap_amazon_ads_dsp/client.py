@@ -15,6 +15,8 @@ SCOPES = ["cpc_advertising:campaign_management"]
 ADS_URL = 'https://advertising-api.amazon.com/dsp/reports'
 TOKEN_EXPIRATION_PERIOD = 3000
 LOGGER = singer.get_logger()
+BACKOFF_MAX_TRIES = 5
+BACKOFF_FACTOR = 2
 
 
 class Server5xxError(Exception):
@@ -26,9 +28,6 @@ class Server42xRateLimitError(Exception):
 
 
 class AmazonAdvertisingClient:
-
-    MAX_TRIES = 5
-
     def __init__(self, config):
         self.config = config
         self.login_timer = None
@@ -60,8 +59,8 @@ class AmazonAdvertisingClient:
     @backoff.on_exception(
         backoff.expo,
         (Server5xxError, ConnectionError, Server42xRateLimitError),
-        max_tries=5,
-        factor=2)
+        max_tries=BACKOFF_MAX_TRIES,
+        factor=BACKOFF_FACTOR)
     def make_request(self,
                      url=None,
                      method=None,
@@ -82,27 +81,31 @@ class AmazonAdvertisingClient:
             'Amazon-Advertising-API-Scope': profile,
         }
 
-        if method == "GET":
-            LOGGER.info(
-                f"Making {method} request to {url} with params: {params}")
-            response = self.session.get(url,
-                                        headers=headers,
-                                        stream=stream,
-                                        params=params)
-        elif method == "POST":
-            LOGGER.info(f"Making {method} request to {url} with body {body}")
-            response = self.session.post(url,
-                                         headers=headers,
-                                         params=params,
-                                         data=body)
-        elif method == "PATCH":
-            LOGGER.info(f"Making {method} request to {url} with body {body}")
-            response = self.session.patch(url,
-                                          headers=headers,
-                                          json=body,
-                                          params=params)
-        else:
-            raise Exception("Unsupported HTTP method")
+        try:
+            if method == "GET":
+                LOGGER.info(
+                    f"Making {method} request to {url} with params: {params}")
+                response = self.session.get(url,
+                                            headers=headers,
+                                            stream=stream,
+                                            params=params)
+            elif method == "POST":
+                LOGGER.info(f"Making {method} request to {url} with body {body}")
+                response = self.session.post(url,
+                                             headers=headers,
+                                             params=params,
+                                             data=body)
+            elif method == "PATCH":
+                LOGGER.info(f"Making {method} request to {url} with body {body}")
+                response = self.session.patch(url,
+                                              headers=headers,
+                                              json=body,
+                                              params=params)
+            else:
+                raise Exception("Unsupported HTTP method")
+        except ConnectionError as ex:
+            LOGGER.info(f"Connection error {ex}")
+            raise ConnectionError
 
         LOGGER.info("Received code: {}".format(response.status_code))
 
@@ -126,8 +129,8 @@ class AmazonAdvertisingClient:
 
 # Stream CSV in batches of lines for transform and Singer write
 @backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError),
-                      max_tries=5,
-                      factor=2)
+                      max_tries=BACKOFF_MAX_TRIES,
+                      factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):
     with requests.get(url, stream=True) as data:
         reader = csv.DictReader(

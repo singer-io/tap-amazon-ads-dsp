@@ -113,20 +113,12 @@
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
-    "totalNewToBrandProductSalesUSD14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
-    },
     "totalPercentOfPurchasesNewToBrand14d": {
       "type": ["null", "number"],
       "multipleOf": 0.0001
     },
     "totalAddToCart14d": {
       "type": ["null", "integer"]
-    },
-    "newToBrandProductSalesUSD14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
     },
     "totalNewToBrandROAS14d": {
       "type": ["number", "null"],
@@ -135,24 +127,12 @@
     "totalPurchasesViews14d": {
       "type": ["null", "integer"]
     },
-    "newToBrandProductSalesGBP14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
-    },
-    "totalSalesGBP14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
-    },
     "totalNewToBrandPurchaseRate14d": {
       "type": ["number", "null"],
       "multipleOf": 0.0001
     },
     "creativeType": {
       "type": ["null", "string"]
-    },
-    "newToBrandProductSalesJPY14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
     },
     "totalSubscribeAndSaveSubscriptionCPA14d": {
       "type": ["null", "number"],
@@ -184,16 +164,8 @@
       "type": ["null", "number"],
       "multipleOf": 0.00001
     },
-    "totalNewToBrandProductSalesJPY14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
-    },
     "totalNewToBrandUnitsSold14d": {
       "type": ["null", "integer"]
-    },
-    "totalNewToBrandProductSalesGBP14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
     },
     "totalAddToListViews14d": {
       "type": ["null", "integer"]
@@ -212,10 +184,6 @@
     "totalPRPVr14d": {
       "type": ["number", "null"],
       "multipleOf": 0.00001
-    },
-    "totalSalesJPY14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
     },
     "agencyFee": {
 			"type": ["null", "number"],
@@ -246,10 +214,6 @@
     "newToBrandUnitsSold14d": {
       "type": ["null", "integer"]
     },
-    "totalSalesUSD14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
-    },
     "3PFees": {
       "type": ["null", "number"],
       "multipleOf": 0.000001
@@ -257,10 +221,6 @@
     "totalPurchaseRate14d": {
       "type": ["number", "null"],
       "multipleOf": 0.0001
-    },
-    "salesGBP14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
     },
     "newToBrandERPM14d": {
       "type": ["number", "null"],
@@ -287,10 +247,6 @@
       "type": ["number", "null"],
       "multipleOf": 0.00001
     },
-    "salesUSD14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
-    },
     "totalPRPV14d": {
       "type": ["null", "number"],
       "multipleOf": 0.00001
@@ -298,10 +254,6 @@
     "totalDetaiPageViewCPA14d": {
       "type": ["null", "number"],
       "multipleOf": 0.00001
-    },
-    "salesJPY14d": {
-			"type": ["null", "number"],
-			"multipleOf": 0.000001
     },
     "newToBrandROAS14d": {
       "type": ["number", "null"],

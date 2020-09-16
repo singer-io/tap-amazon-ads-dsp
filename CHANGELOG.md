@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.7
+  * Supporting API changes and process reports in order
+
 ## 0.0.6
   * Support string profile configs
 

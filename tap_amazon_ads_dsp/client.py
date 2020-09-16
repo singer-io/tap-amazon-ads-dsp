@@ -105,7 +105,7 @@ class AmazonAdvertisingClient:
                 raise Exception("Unsupported HTTP method")
         except ConnectionError as ex:
             LOGGER.info(f"Connection error {ex}")
-            raise ConnectionError
+            raise ConnectionError(ex)
 
         LOGGER.info("Received code: {}".format(response.status_code))
 

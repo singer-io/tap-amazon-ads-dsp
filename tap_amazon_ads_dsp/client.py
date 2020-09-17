@@ -114,7 +114,7 @@ class AmazonAdvertisingClient:
 
         if response.status_code == 401:
             LOGGER.info(
-                "Received unauthorized error code: {}".format(
+                "Received unauthorized error code. Indicative of access issue for profile {}: {}".format(profile, 
                     response.text))
             self.login()
             raise Server401Error(response.text)

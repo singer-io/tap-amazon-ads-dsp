@@ -23,6 +23,9 @@ class Server5xxError(Exception):
     pass
 
 
+class Server401Error(Exception):
+    pass
+
 class Server42xRateLimitError(Exception):
     pass
 
@@ -56,11 +59,11 @@ class AmazonAdvertisingClient:
 
         self.access_token = tokens['access_token']
 
-    @backoff.on_exception(
-        backoff.expo,
-        (Server5xxError, ConnectionError, Server42xRateLimitError),
-        max_tries=BACKOFF_MAX_TRIES,
-        factor=BACKOFF_FACTOR)
+    @backoff.on_exception(backoff.expo,
+                          (Server5xxError, ConnectionError,
+                           Server42xRateLimitError, Server401Error),
+                          max_tries=BACKOFF_MAX_TRIES,
+                          factor=BACKOFF_FACTOR)
     def make_request(self,
                      url=None,
                      method=None,
@@ -111,9 +114,10 @@ class AmazonAdvertisingClient:
 
         if response.status_code == 401:
             LOGGER.info(
-                "Received unauthorized error code, retrying: {}".format(
+                "Received unauthorized error code: {}".format(
                     response.text))
             self.login()
+            raise Server401Error(response.text)
         elif response.status_code == 429:
             LOGGER.info("Received rate limit response: {}".format(
                 response.headers))

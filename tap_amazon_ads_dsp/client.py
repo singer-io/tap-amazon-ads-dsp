@@ -15,8 +15,8 @@ SCOPES = ["cpc_advertising:campaign_management"]
 ADS_URL = 'https://advertising-api.amazon.com/dsp/reports'
 TOKEN_EXPIRATION_PERIOD = 3000
 LOGGER = singer.get_logger()
-BACKOFF_MAX_TRIES = 5
-BACKOFF_FACTOR = 2
+BACKOFF_MAX_TRIES = 9
+BACKOFF_FACTOR = 3
 
 
 class Server5xxError(Exception):
@@ -114,7 +114,7 @@ class AmazonAdvertisingClient:
 
         if response.status_code == 401:
             LOGGER.info(
-                "Received unauthorized error code. Indicative of access issue for profile {}: {}".format(profile, 
+                "Received unauthorized error code. Indicative of access issue for profile {}: {}".format(profile,
                     response.text))
             self.login()
             raise Server401Error(response.text)

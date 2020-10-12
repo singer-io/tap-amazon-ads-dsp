@@ -29,7 +29,7 @@ def test_request_backoff_on_retry_error(mock_sleep, ads_client):
 
 @mock.patch('time.sleep', return_value=None)
 @mock.patch('tap_amazon_ads_dsp.AmazonAdvertisingClient.login')
-def test_request_backoff_on_unauthorized(mock_sleep, mock_login, ads_client):
+def test_request_backoff_on_unauthorized(mock_login, mock_sleep, ads_client):
     mock_login.return_value = "None"
 
     with requests_mock.Mocker() as m:
@@ -38,4 +38,4 @@ def test_request_backoff_on_unauthorized(mock_sleep, mock_login, ads_client):
         with raises(Server401Error) as ex:
             response = ads_client.make_request(method='POST', url='https://advertising-api.amazon.com/dsp/reports')
         # Assert backoff retry count as expected
-        assert mock_sleep.call_count == client.BACKOFF_MAX_TRIES
+        assert mock_sleep.call_count == client.BACKOFF_MAX_TRIES - 1

@@ -59,11 +59,11 @@ class AmazonAdvertisingClient:
 
         self.access_token = tokens['access_token']
 
-    @backoff.on_exception(backoff.expo,
-                          (Server5xxError, ConnectionError,
-                           Server42xRateLimitError, Server401Error),
-                          max_tries=BACKOFF_MAX_TRIES,
-                          factor=BACKOFF_FACTOR)
+    @backoff.on_exception(
+        backoff.expo,
+        (Server5xxError, ConnectionError, Server42xRateLimitError, Server401Error),
+        max_tries=BACKOFF_MAX_TRIES,
+        factor=BACKOFF_FACTOR)
     def make_request(self,
                      url=None,
                      method=None,

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.8
+  * Fail on authorization errors and increase backoff timings
+
 ## 0.0.7
   * Supporting API changes and process reports in order
 

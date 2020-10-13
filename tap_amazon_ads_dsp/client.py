@@ -15,13 +15,16 @@ SCOPES = ["cpc_advertising:campaign_management"]
 ADS_URL = 'https://advertising-api.amazon.com/dsp/reports'
 TOKEN_EXPIRATION_PERIOD = 3000
 LOGGER = singer.get_logger()
-BACKOFF_MAX_TRIES = 5
-BACKOFF_FACTOR = 2
+BACKOFF_MAX_TRIES = 9
+BACKOFF_FACTOR = 3
 
 
 class Server5xxError(Exception):
     pass
 
+
+class Server401Error(Exception):
+    pass
 
 class Server42xRateLimitError(Exception):
     pass
@@ -58,7 +61,7 @@ class AmazonAdvertisingClient:
 
     @backoff.on_exception(
         backoff.expo,
-        (Server5xxError, ConnectionError, Server42xRateLimitError),
+        (Server5xxError, ConnectionError, Server42xRateLimitError, Server401Error),
         max_tries=BACKOFF_MAX_TRIES,
         factor=BACKOFF_FACTOR)
     def make_request(self,
@@ -111,9 +114,10 @@ class AmazonAdvertisingClient:
 
         if response.status_code == 401:
             LOGGER.info(
-                "Received unauthorized error code, retrying: {}".format(
+                "Received unauthorized error code. Indicative of access issue for profile {}: {}".format(profile,
                     response.text))
             self.login()
+            raise Server401Error(response.text)
         elif response.status_code == 429:
             LOGGER.info("Received rate limit response: {}".format(
                 response.headers))

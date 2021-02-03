@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.9
+  * Remove equals sign prefixes for ID fields from csv
+
 ## 0.0.8
   * Fail on authorization errors and increase backoff timings
 

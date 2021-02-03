@@ -113,7 +113,7 @@
             "type": ["null", "string"]
         },
         "lineItemId": {
-            "type": ["null", "integer"]
+            "type": ["null", "string"]
         },
         "messageSentCPA14d": {
             "type": ["null", "number"],
@@ -439,7 +439,7 @@
             "type": ["null", "integer"]
         },
         "orderId": {
-            "type": ["null", "integer"]
+            "type": ["null", "string"]
         },
         "brandStoreEngagement3Clicks": {
             "type": ["null", "integer"]
@@ -1136,7 +1136,7 @@
 			"multipleOf": 0.0001
 		},
         "advertiserId": {
-            "type": ["null", "integer"]
+            "type": ["null", "string"]
         },
         "mashupClickToPage": {
             "type": ["null", "integer"]

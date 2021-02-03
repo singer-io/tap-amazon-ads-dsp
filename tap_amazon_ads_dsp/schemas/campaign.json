@@ -194,7 +194,7 @@
       "multipleOf": 0.0001
     },
     "creativeID": {
-      "type": ["null", "integer"]
+      "type": ["null", "string"]
     },
     "3pFeeCPM2": {
 			"type": ["null", "number"],

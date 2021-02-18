@@ -34,12 +34,19 @@ def get_primary_keys(report_dimensions, report_type):
 # - Add __sdc_record_hash
 # - Add report_date as API inconcistent across report type
 # - Convert percentage strings to decimals of schema defined precision
+# - ID fields returned with escaped equals sign prefix
+#   - "=""4788379690601""
+#   - Remove = and associated double quote escaping
 def transform_report(schema, report_type, report_date,
                      report_dimensions, report_data):
     report_primary_keys = get_primary_keys(report_dimensions, report_type)
 
     for record in report_data:
         primary_keys = build_primary_keys_for_record(report_primary_keys, record)
+        for key in primary_keys.keys():
+            transformed_value = primary_keys[key].lstrip('="').rstrip('"')
+            record[key] = transformed_value
+            primary_keys[key] = transformed_value
         dims_md5 = str(hash_data(json.dumps(primary_keys, sort_keys=True)))
         record['__sdc_record_hash'] = dims_md5
 

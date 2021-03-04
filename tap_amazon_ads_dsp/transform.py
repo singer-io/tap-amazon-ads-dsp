@@ -44,9 +44,10 @@ def transform_report(schema, report_type, report_date,
     for record in report_data:
         primary_keys = build_primary_keys_for_record(report_primary_keys, record)
         for key in primary_keys.keys():
-            transformed_value = primary_keys[key].lstrip('="').rstrip('"')
-            record[key] = transformed_value
-            primary_keys[key] = transformed_value
+            if primary_keys[key] is not None: 
+                transformed_value = primary_keys[key].lstrip('="').rstrip('"')
+                record[key] = transformed_value
+                primary_keys[key] = transformed_value
         dims_md5 = str(hash_data(json.dumps(primary_keys, sort_keys=True)))
         record['__sdc_record_hash'] = dims_md5
 

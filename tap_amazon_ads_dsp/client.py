@@ -8,6 +8,8 @@ import requests_oauthlib
 import singer
 import singer.metrics
 
+from ssl import SSLError, SSLZeroReturnError
+
 LOGGER = singer.get_logger()  # noqa
 
 TOKEN_URL = 'https://api.amazon.com/auth/o2/token'
@@ -132,7 +134,7 @@ class AmazonAdvertisingClient:
 
 
 # Stream CSV in batches of lines for transform and Singer write
-@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError),
+@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError),
                       max_tries=BACKOFF_MAX_TRIES,
                       factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):

@@ -134,7 +134,7 @@ class AmazonAdvertisingClient:
 
 
 # Stream CSV in batches of lines for transform and Singer write
-@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError),
+@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
                       max_tries=BACKOFF_MAX_TRIES,
                       factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):

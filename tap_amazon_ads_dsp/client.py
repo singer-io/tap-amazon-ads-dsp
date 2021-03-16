@@ -8,6 +8,7 @@ import requests_oauthlib
 import singer
 import singer.metrics
 
+from urllib3.exceptions import ProtocolError
 from ssl import SSLError, SSLZeroReturnError
 
 LOGGER = singer.get_logger()  # noqa
@@ -108,7 +109,7 @@ class AmazonAdvertisingClient:
                                               params=params)
             else:
                 raise Exception("Unsupported HTTP method")
-        except ConnectionError as ex:
+        except (ConnectionError, ProtocolError) as ex:
             LOGGER.info(f"Connection error {ex}")
             raise ConnectionError(ex)
 
@@ -134,9 +135,11 @@ class AmazonAdvertisingClient:
 
 
 # Stream CSV in batches of lines for transform and Singer write
-@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
-                      max_tries=BACKOFF_MAX_TRIES,
-                      factor=BACKOFF_FACTOR)
+@backoff.on_exception(
+    backoff.expo,
+    (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
+    max_tries=BACKOFF_MAX_TRIES,
+    factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):
     with requests.get(url, stream=True) as data:
         reader = csv.DictReader(

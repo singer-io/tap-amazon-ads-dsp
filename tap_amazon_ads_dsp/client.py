@@ -141,15 +141,19 @@ class AmazonAdvertisingClient:
     max_tries=BACKOFF_MAX_TRIES,
     factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):
-    with requests.get(url, stream=True) as data:
-        reader = csv.DictReader(
-            codecs.iterdecode(data.iter_lines(chunk_size=1024), "utf-8"))
-        batch = []
+    try:
+        with requests.get(url, stream=True) as data:
+            reader = csv.DictReader(
+                codecs.iterdecode(data.iter_lines(chunk_size=1024), "utf-8"))
+            batch = []
 
-        for record in reader:
-            batch.append(record)
-            if len(batch) == batch_size:
+            for record in reader:
+                batch.append(record)
+                if len(batch) == batch_size:
+                    yield batch
+                    batch = []
+            if batch:
                 yield batch
-                batch = []
-        if batch:
-            yield batch
+    except Exception as ex:
+        LOGGER.info(f"Stream error {ex}")
+        raise ConnectionError(ex)

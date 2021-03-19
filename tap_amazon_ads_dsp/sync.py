@@ -390,6 +390,9 @@ def sync_report(client,
 def sync(client, config, catalog, state):
     # Get config parameters
     profile_id = config.get('profile_id')
+    if profile_id is None: 
+        LOGGER.warn("No profile ID specified")
+        return
 
     start_date = config.get("start_date")
     reports = config.get("reports", [])

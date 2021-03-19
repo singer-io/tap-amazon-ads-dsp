@@ -17,7 +17,7 @@ LOGGER = singer.get_logger()
 
 REQUIRED_CONFIG_KEYS = [
     'client_id', 'client_secret', 'refresh_token', 'redirect_uri',
-    'start_date', 'reports'
+    'start_date', 'reports', 'profile_id'
 ]
 
 

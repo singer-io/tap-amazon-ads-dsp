@@ -8,6 +8,7 @@ import requests_oauthlib
 import singer
 import singer.metrics
 
+from datetime import datetime
 from urllib3.exceptions import ProtocolError
 from ssl import SSLError, SSLZeroReturnError
 
@@ -140,11 +141,16 @@ class AmazonAdvertisingClient:
     (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
     max_tries=BACKOFF_MAX_TRIES,
     factor=BACKOFF_FACTOR)
+def make_retryable_stream_request(url):
+    LOGGER.info(f"[{datetime.now().strftime("%H:%M:%S")}] @make_retryable_stream_request GET {url}")
+    return requests.get(url, stream=True)
+
 def stream_csv(url, batch_size=1024):
     try:
-        with requests.get(url, stream=True) as data:
+        LOGGER.info(f"[{datetime.now().strftime("%H:%M:%S")}] @stream_csv GET {url}")
+        with make_retryable_stream_request(url) as data:
             reader = csv.DictReader(
-                codecs.iterdecode(data.iter_lines(chunk_size=1024), "utf-8"))
+                codecs.iterdecode(data.iter_lines(chunk_size=batch_size), "utf-8"))
             batch = []
 
             for record in reader:
@@ -155,5 +161,5 @@ def stream_csv(url, batch_size=1024):
             if batch:
                 yield batch
     except Exception as ex:
-        LOGGER.info(f"Stream error {ex}")
+        LOGGER.info(f"[{datetime.now().strftime("%H:%M:%S")}] @stream_csv Stream error {url}: {ex}")
         raise ConnectionError(ex)

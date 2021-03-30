@@ -142,12 +142,14 @@ class AmazonAdvertisingClient:
     max_tries=BACKOFF_MAX_TRIES,
     factor=BACKOFF_FACTOR)
 def make_retryable_stream_request(url):
-    LOGGER.info(f"[{datetime.now().strftime("%H:%M:%S")}] @make_retryable_stream_request GET {url}")
+    now = datetime.now().strftime("%H:%M:%S")
+    LOGGER.info(f"[{now}] @make_retryable_stream_request GET {url}")
     return requests.get(url, stream=True)
 
 def stream_csv(url, batch_size=1024):
     try:
-        LOGGER.info(f"[{datetime.now().strftime("%H:%M:%S")}] @stream_csv GET {url}")
+        now = datetime.now().strftime("%H:%M:%S")
+        LOGGER.info(f"[{now}] @stream_csv GET {url}")
         with make_retryable_stream_request(url) as data:
             reader = csv.DictReader(
                 codecs.iterdecode(data.iter_lines(chunk_size=batch_size), "utf-8"))
@@ -161,5 +163,6 @@ def stream_csv(url, batch_size=1024):
             if batch:
                 yield batch
     except Exception as ex:
-        LOGGER.info(f"[{datetime.now().strftime("%H:%M:%S")}] @stream_csv Stream error {url}: {ex}")
+        now = datetime.now().strftime("%H:%M:%S")
+        LOGGER.info(f"[{now}] @stream_csv Stream error {url}: {ex}")
         raise ConnectionError(ex)

@@ -146,6 +146,11 @@ def make_retryable_stream_request(url):
     LOGGER.info(f"[{now}] @make_retryable_stream_request GET {url}")
     return requests.get(url, stream=True)
 
+@backoff.on_exception(
+    backoff.expo,
+    (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
+    max_tries=BACKOFF_MAX_TRIES,
+    factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):
     try:
         now = datetime.now().strftime("%H:%M:%S")

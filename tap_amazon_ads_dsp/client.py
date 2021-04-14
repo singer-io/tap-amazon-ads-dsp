@@ -175,6 +175,7 @@ def stream_csv(url, batch_size=1024):
     max_tries=BACKOFF_MAX_TRIES,
     factor=BACKOFF_FACTOR)
 def download_file(url, path):
+    now = datetime.now().strftime("%H:%M:%S")
     LOGGER.info(f"[{now}] @download_file GET {url} --> {path}")
     with requests.get(url, stream=True) as r:
         r.raise_for_status()

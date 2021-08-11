@@ -389,9 +389,10 @@ def sync_report(client,
 # Sync - main function to loop through select streams to sync_endpoints and sync_reports
 def sync(client, config, catalog, state):
     # Get config parameters
-    profiles = config.get("profiles")
-    if isinstance(profiles, str):
-        profiles = profiles.replace(" ", "").split(",")
+    profile_id = config.get('profile_id')
+    if profile_id is None: 
+        LOGGER.warn("No profile ID specified")
+        return
 
     start_date = config.get("start_date")
     reports = config.get("reports", [])
@@ -418,47 +419,44 @@ def sync(client, config, catalog, state):
         if report_name in selected_streams:
             report_streams.append(report_name)
     LOGGER.info("Sync Report Streams: {}".format(report_streams))
+    LOGGER.info("Profile: {} - START Syncing".format(profile_id))
 
-    # PROFILE OUTER LOOP
-    for profile in profiles:
-        LOGGER.info("Profile: {} - START Syncing".format(profile))
+    # REPORT STREAMS LOOP
+    total_profile_records = 0
+    for report in reports:
+        report_name = report.get("name")
+        # if report_name in report_streams:
+        update_currently_syncing(state, report_name)
 
-        # REPORT STREAMS LOOP
-        total_profile_records = 0
-        for report in reports:
-            report_name = report.get("name")
-            # if report_name in report_streams:
-            update_currently_syncing(state, report_name)
+        LOGGER.info("Report: {} - START Syncing for Profile: {}".format(
+            report_name, profile_id))
 
-            LOGGER.info("Report: {} - START Syncing for Profile: {}".format(
-                report_name, profile))
+        # Write schema and log selected fields for stream
+        write_schema(catalog, report_name)
 
-            # Write schema and log selected fields for stream
-            write_schema(catalog, report_name)
+        selected_fields = get_selected_fields(catalog, report_name)
+        LOGGER.info("Report: {} - selected_fields: {}".format(
+            report_name, selected_fields))
 
-            selected_fields = get_selected_fields(catalog, report_name)
-            LOGGER.info("Report: {} - selected_fields: {}".format(
-                report_name, selected_fields))
+        total_records = sync_report(
+            client=client,
+            catalog=catalog,
+            state=state,
+            start_date=start_date,
+            report_name=report_name,
+            report_config=report,
+            tap_config=config,
+            profile=profile_id,
+            selected_fields=selected_fields,
+        )
 
-            total_records = sync_report(
-                client=client,
-                catalog=catalog,
-                state=state,
-                start_date=start_date,
-                report_name=report_name,
-                report_config=report,
-                tap_config=config,
-                profile=profile,
-                selected_fields=selected_fields,
-            )
+        total_profile_records = total_profile_records + total_records
+        # pylint: disable=line-too-long
+        LOGGER.info(
+            "Report: {} - FINISHED Syncing for Profile: {}, Total Records: {}"
+            .format(report_name, profile_id, total_records))
+        # pylint: enable=line-too-long
+        update_currently_syncing(state, None)
 
-            total_profile_records = total_profile_records + total_records
-            # pylint: disable=line-too-long
-            LOGGER.info(
-                "Report: {} - FINISHED Syncing for Profile: {}, Total Records: {}"
-                .format(report_name, profile, total_records))
-            # pylint: enable=line-too-long
-            update_currently_syncing(state, None)
-
-        LOGGER.info("Profile: {} - FINISHED Syncing, Total Records: {}".format(
-            profile, total_profile_records))
+    LOGGER.info("Profile: {} - FINISHED Syncing, Total Records: {}".format(
+        profile_id, total_profile_records))

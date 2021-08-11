@@ -1,12 +1,18 @@
 import codecs
 import csv
 import threading
+import os
 
 import backoff
 import requests
 import requests_oauthlib
 import singer
 import singer.metrics
+
+import time
+from datetime import datetime
+from urllib3.exceptions import ProtocolError
+from ssl import SSLError, SSLZeroReturnError
 
 LOGGER = singer.get_logger()  # noqa
 
@@ -17,7 +23,6 @@ TOKEN_EXPIRATION_PERIOD = 3000
 LOGGER = singer.get_logger()
 BACKOFF_MAX_TRIES = 9
 BACKOFF_FACTOR = 3
-
 
 class Server5xxError(Exception):
     pass
@@ -106,7 +111,7 @@ class AmazonAdvertisingClient:
                                               params=params)
             else:
                 raise Exception("Unsupported HTTP method")
-        except ConnectionError as ex:
+        except (ConnectionError, ProtocolError) as ex:
             LOGGER.info(f"Connection error {ex}")
             raise ConnectionError(ex)
 
@@ -130,21 +135,50 @@ class AmazonAdvertisingClient:
 
         return response
 
-
-# Stream CSV in batches of lines for transform and Singer write
-@backoff.on_exception(backoff.expo, (Server5xxError, ConnectionError),
-                      max_tries=BACKOFF_MAX_TRIES,
-                      factor=BACKOFF_FACTOR)
+@backoff.on_exception(
+    backoff.expo,
+    (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
+    max_tries=BACKOFF_MAX_TRIES,
+    factor=BACKOFF_FACTOR)
 def stream_csv(url, batch_size=1024):
-    with requests.get(url, stream=True) as data:
-        reader = csv.DictReader(
-            codecs.iterdecode(data.iter_lines(chunk_size=1024), "utf-8"))
-        batch = []
+    try:
+        now = datetime.now().strftime("%H:%M:%S")
+        LOGGER.info(f"[{now}] @stream_csv GET {url}")
 
-        for record in reader:
-            batch.append(record)
-            if len(batch) == batch_size:
+        path = f"/tmp/{time.time()}"
+        download_file(url, path)
+
+        now = datetime.now().strftime("%H:%M:%S")
+        LOGGER.info(f"[{now}] @stream_csv downloaded file {url}")
+
+        with open(path, "rb") as data:
+            reader = csv.DictReader(codecs.iterdecode(data, "utf-8"))
+            batch = []
+
+            for record in reader:
+                batch.append(record)
+                if len(batch) == batch_size:
+                    yield batch
+                    batch = []
+            if batch:
                 yield batch
-                batch = []
-        if batch:
-            yield batch
+
+        os.remove(path)
+    except Exception as ex:
+        now = datetime.now().strftime("%H:%M:%S")
+        LOGGER.info(f"[{now}] @stream_csv Stream error {url}: {ex}")
+        raise ConnectionError(ex)
+
+@backoff.on_exception(
+    backoff.expo,
+    (Server5xxError, ConnectionError, SSLError, SSLZeroReturnError, requests.exceptions.RequestException),
+    max_tries=BACKOFF_MAX_TRIES,
+    factor=BACKOFF_FACTOR)
+def download_file(url, path):
+    now = datetime.now().strftime("%H:%M:%S")
+    LOGGER.info(f"[{now}] @download_file GET {url} --> {path}")
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192): 
+                f.write(chunk)
